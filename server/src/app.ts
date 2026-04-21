@@ -4,7 +4,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import "./config/db.js";
 
-// import authRoutes from "./routes/auth.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -18,6 +18,6 @@ app.use("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 export default app;

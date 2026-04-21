@@ -9,6 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": false,
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
