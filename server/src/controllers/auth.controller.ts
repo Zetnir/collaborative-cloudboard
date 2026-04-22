@@ -28,11 +28,15 @@ export const register = async (req: Request, res: Response) => {
     });
     await user.save();
 
-    const token = generateToken(user._id.toString());
+    const accessToken = generateToken(user._id.toString(), 60 * 60); // Access token valid for 60 minutes
+    const refreshToken = generateToken(user._id.toString(), 60 * 60 * 24 * 7); // Refresh token valid for 7 days
 
     res.status(201).json({
       user: userToDTO(user),
-      token,
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -59,11 +63,15 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = generateToken(user._id.toString());
+    const accessToken = generateToken(user._id.toString(), 60 * 60); // Access token valid for 60 minutes
+    const refreshToken = generateToken(user._id.toString(), 60 * 60 * 24 * 7); // Refresh token valid for 7 days
 
     res.json({
       user: userToDTO(user),
-      token,
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -100,4 +108,5 @@ const userToDTO = (user: any) => ({
   firstName: user.firstName,
   lastName: user.lastName,
   avatarUrl: user.avatarUrl,
+  role: user.role,
 });
