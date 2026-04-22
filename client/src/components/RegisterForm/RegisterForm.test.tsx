@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { RegisterForm } from "./RegisterForm";
+import { RegisterForm } from "../RegisterForm";
 
 describe("RegisterForm", () => {
   it("should render all register form fields", () => {

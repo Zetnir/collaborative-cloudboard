@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "../LoginForm";
 
 describe("LoginForm", () => {
   it("should render login form fields", () => {

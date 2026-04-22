@@ -5,11 +5,7 @@ export interface User {
   firstName: string;
   lastName: string;
   avatarUrl?: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  token: string;
+  role: string;
 }
 
 export interface RegisterCredentials {
@@ -25,13 +21,35 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface AuthContextType {
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  tokens: AuthTokens;
+}
+
+export interface JWTPayload {
+  userId: string;
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
+export interface AuthState {
   user: User | null;
-  token: string | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+}
+
+export interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
+  refreshAuth: () => Promise<void>;
   logout: () => void;
-  isAuthenticated: boolean;
+  clearError: () => void;
 }
