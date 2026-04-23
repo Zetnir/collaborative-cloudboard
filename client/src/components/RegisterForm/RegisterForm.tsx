@@ -1,5 +1,6 @@
 import { FC, FormEvent, useState } from "react";
 import { RegisterCredentials } from "../../types/auth.types";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface RegisterFormProps {
   onSubmit: (credentials: RegisterCredentials) => Promise<void>;
@@ -20,6 +21,8 @@ export const RegisterForm: FC<RegisterFormProps> = ({
     firstName: "",
     lastName: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
@@ -122,33 +125,55 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter password"
-            required
-            className="form-control"
-            disabled={isLoading}
-          />
+          <div className="position-relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              required
+              className="form-control"
+              disabled={isLoading}
+            />
+            <span
+              className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </span>
+          </div>
         </div>
         <div className="mb-3">
           <label htmlFor="confirmPassword" className="form-label">
             Confirm Password
           </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm your password"
-            required
-            className="form-control"
-            disabled={isLoading}
-          />
+          <div className="position-relative">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              required
+              className="form-control"
+              disabled={isLoading}
+            />
+            <span
+              className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? (
+                <AiOutlineEyeInvisible />
+              ) : (
+                <AiOutlineEye />
+              )}
+            </span>
+          </div>
         </div>
 
         {passwordError && (

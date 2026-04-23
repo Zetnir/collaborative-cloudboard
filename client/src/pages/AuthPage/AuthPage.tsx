@@ -21,11 +21,9 @@ export const AuthPage: FC = () => {
   }) => {
     try {
       await login(credentials);
-      // Login successful - navigate to dashboard
       navigate("/dashboard");
     } catch (err) {
       // Error is already set in auth context and displayed in form
-      console.error("AuthPage: Login error:", err);
     }
   };
 
@@ -38,8 +36,8 @@ export const AuthPage: FC = () => {
   }) => {
     try {
       await register(credentials);
-      // navigate("/dashboard");
-    } catch {
+      navigate("/dashboard");
+    } catch (err) {
       // Error is handled in hook and displayed in form
     }
   };

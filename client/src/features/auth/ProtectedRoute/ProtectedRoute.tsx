@@ -28,9 +28,9 @@ export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   }
 
   // Redirect to login if not authenticated
-  // if (!isAuthenticated) {
-  //   return <Navigate to={fallbackPath} state={{ from: location }} replace />;
-  // }
+  if (!isAuthenticated) {
+    return <Navigate to={fallbackPath} state={{ from: location }} replace />;
+  }
 
   // Check role-based access
   if (requiredRoles.length > 0 && user) {

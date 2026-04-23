@@ -60,7 +60,7 @@ export const LoginForm: FC<LoginFormProps> = ({
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder="Enter password"
               required
               className="form-control pe-5"
               disabled={isLoading}

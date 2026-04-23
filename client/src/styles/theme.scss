@@ -160,3 +160,20 @@ $border-radius-sm: 0.25rem; // var(--radius-sm)
 
 /* Typography */
 $font-family-base: "Manrope", sans-serif; // var(--font-family-base)
+
+// Override default password input styles to hide the reveal button and auto-fill decoration
+/* Safari */
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+}
+
+/* Chrome/Edge (Windows) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}

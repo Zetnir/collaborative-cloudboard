@@ -50,9 +50,8 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<User> => {
-    // const response = await axiosInstance.get<User>("/auth/me");
-    // return response.data;
-    throw new Error("Not implemented");
+    const response = await axiosInstance.get<User>("/auth/me");
+    return response.data;
   },
 
   // Password reset endpoints (optional, can be implemented later)

@@ -92,9 +92,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({
-      user: userToDTO(user),
-    });
+    res.json(userToDTO(user));
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

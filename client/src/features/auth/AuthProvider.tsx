@@ -105,9 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         if (accessToken && !isTokenExpired(accessToken)) {
           // Valid access token exists
-          console.log("Valid access token found, fetching user...");
           const user = await authApi.getCurrentUser();
-          console.log("User fetched successfully:", user);
           setState({
             user,
             isAuthenticated: true,
