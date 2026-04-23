@@ -5,6 +5,10 @@ import dotenv from "dotenv";
 import "./config/db.js";
 
 import authRoutes from "./routes/auth.routes.js";
+import projectRoutes from "./routes/project.routes.js";
+import taskRoutes from "./routes/task.routes.js";
+
+import { verifyToken } from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -19,5 +23,7 @@ app.use("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/projects", verifyToken, projectRoutes);
+app.use("/api/tasks", verifyToken, taskRoutes);
 
 export default app;
