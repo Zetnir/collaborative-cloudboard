@@ -137,13 +137,15 @@ export const RegisterForm: FC<RegisterFormProps> = ({
               className="form-control"
               disabled={isLoading}
             />
-            <span
-              className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-              style={{ cursor: "pointer" }}
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </span>
+            {formData?.password ? (
+              <span
+                className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </span>
+            ) : null}
           </div>
         </div>
         <div className="mb-3">
@@ -162,24 +164,26 @@ export const RegisterForm: FC<RegisterFormProps> = ({
               className="form-control"
               disabled={isLoading}
             />
-            <span
-              className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-              style={{ cursor: "pointer" }}
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              {showConfirmPassword ? (
-                <AiOutlineEyeInvisible />
-              ) : (
-                <AiOutlineEye />
-              )}
-            </span>
+            {formData?.confirmPassword ? (
+              <span
+                className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <AiOutlineEyeInvisible />
+                ) : (
+                  <AiOutlineEye />
+                )}
+              </span>
+            ) : null}
           </div>
         </div>
 
         {passwordError && (
-          <div className="text-sm text-red-600">{passwordError}</div>
+          <div className="text-sm text-danger">{passwordError}</div>
         )}
-        {error && <div className="text-sm text-red-600">{error}</div>}
+        {error && <div className="text-sm text-danger">{error}</div>}
       </div>
       <button
         type="submit"
