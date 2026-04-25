@@ -5,7 +5,8 @@ import { ProtectedRoute } from "./features/auth/ProtectedRoute/ProtectedRoute";
 import { AuthPage } from "./pages/AuthPage/AuthPage";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
-import { BoardAddEdit } from "./pages/BoardAddEdit/BoardAddEdit";
+import "react-toastify/dist/ReactToastify.css";
+import { BoardDetails } from "./features/boards/BoardDetails/BoardDetails";
 
 function App() {
   return (
@@ -27,7 +28,14 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
-          <Route path="/dashboard/add-edit" element={<BoardAddEdit />} />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <BoardDetails />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Error Route */}
           <Route path="/error" element={<ErrorPage />} />

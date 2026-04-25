@@ -1,8 +1,6 @@
 import { FaCirclePlus } from "react-icons/fa6";
 import "./CreateBoardCard.scss";
 
-import { CreateBoardModal } from "../CreateBoardModal/CreateBoardModal";
-
 export const CreateBoardCard = () => {
   return (
     <>
@@ -21,7 +19,6 @@ export const CreateBoardCard = () => {
         <FaCirclePlus size={35} className="icon mb-2" />
         <h4 className="text-muted">Create New Board</h4>
       </div>
-      <CreateBoardModal />
     </>
   );
 };

@@ -3,6 +3,8 @@ import { useAuth } from "../../features/auth/AuthContext";
 import { useNavigate } from "react-router";
 import "./Dashboard.scss";
 import { BoardList } from "../../features/boards/BoardList/BoardList";
+import { ToastContainer } from "react-toastify";
+import { CreateBoardModal } from "../../features/boards/CreateBoardModal/CreateBoardModal";
 
 export const Dashboard: FC = () => {
   const { user, logout } = useAuth();
@@ -50,6 +52,9 @@ export const Dashboard: FC = () => {
           <BoardList />
         </div>
       </div>
+
+      <CreateBoardModal />
+      <ToastContainer />
     </div>
   );
 };

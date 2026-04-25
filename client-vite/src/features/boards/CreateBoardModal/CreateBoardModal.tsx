@@ -4,6 +4,9 @@ import TomSelect from "tom-select";
 import "tom-select/dist/css/tom-select.css";
 import { usersApi } from "../../../api/usersApi";
 import { User } from "../../../types/auth.types";
+import { Project, projectsApi } from "../../../api/projectsApi";
+import { useAuth } from "../../auth/AuthContext";
+import { toast } from "react-toastify";
 
 interface ProjectFormData {
   name: string;
@@ -18,10 +21,13 @@ export const CreateBoardModal = () => {
     members: [],
   } as ProjectFormData);
 
+  const { user } = useAuth();
+
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [users, setUsers] = useState<User[] | null>(null);
 
   const selectRef = useRef<HTMLSelectElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -37,17 +43,28 @@ export const CreateBoardModal = () => {
     }
   };
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const project = formatProjectData(formData);
+    try {
+      await projectsApi.create(project);
+      toast.success("Board created successfully!");
+      closeModal();
+      // Optionally, you can reset the form or close the modal here
+    } catch (error) {
+      console.error("Error creating project:", error);
+      toast.error("Failed to create board.");
+      closeModal();
+    }
   };
 
   const formatProjectData = (data: ProjectFormData) => {
     return {
       name: data.name || "Untitled Board",
       description: data.description || "",
+      owner: user?.id || "", // Assuming user is authenticated and has an ID
       members: data.members || [],
-    };
+    } as Omit<Project, "id" | "createdAt">;
   };
 
   const fetchUsers = async () => {
@@ -56,6 +73,19 @@ export const CreateBoardModal = () => {
       setUsers(users);
       setLoadingUsers(false);
     });
+  };
+
+  const closeModal = () => {
+    setFormData({ name: "", description: "", members: [] });
+
+    (document.activeElement as HTMLElement)?.blur();
+
+    const el = selectRef.current;
+    if (el && el.tomselect) {
+      el.tomselect.clear();
+    }
+
+    document.getElementById("closeModalButton")?.click();
   };
 
   useEffect(() => {
@@ -69,7 +99,7 @@ export const CreateBoardModal = () => {
       loadUsers();
     } else {
       // Prevent double initialization
-      if (!selectRef.current.tomselect) {
+      if (selectRef.current && !selectRef.current.tomselect) {
         new TomSelect(selectRef.current, {
           plugins: ["remove_button"],
           create: false,
@@ -82,9 +112,10 @@ export const CreateBoardModal = () => {
     <div
       className="modal fade"
       id="exampleModal"
+      role="dialog"
       tabIndex={-1}
+      ref={modalRef}
       aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -96,6 +127,7 @@ export const CreateBoardModal = () => {
               <button
                 type="button"
                 className="btn-close"
+                id="closeModalButton"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -160,7 +192,7 @@ export const CreateBoardModal = () => {
               <button
                 type="button"
                 className="btn btn-secondary"
-                data-bs-dismiss="modal"
+                onClick={closeModal}
               >
                 Cancel
               </button>

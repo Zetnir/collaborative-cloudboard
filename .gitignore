@@ -95,3 +95,5 @@ jest-html-reporters-*
 # ============================================
 
 .github/agents/
+
+package-lock.json
