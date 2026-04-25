@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useAuth } from "../../features/auth/AuthContext";
 import { useNavigate } from "react-router";
 import "./Dashboard.scss";
+import { BoardList } from "../../features/boards/BoardList/BoardList";
 
 export const Dashboard: FC = () => {
   const { user, logout } = useAuth();
@@ -46,6 +47,7 @@ export const Dashboard: FC = () => {
             Add your dashboard content here. This page is protected and only
             accessible to authenticated users.
           </p>
+          <BoardList />
         </div>
       </div>
     </div>

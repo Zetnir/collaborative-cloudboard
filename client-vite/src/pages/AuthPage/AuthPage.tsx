@@ -5,9 +5,9 @@ import { useNavigate } from "react-router";
 import { FaCloud } from "react-icons/fa";
 
 // Components
-import { AuthToggle } from "../../components/AuthToggle/AuthToggle";
-import { LoginForm } from "../../components/LoginForm/LoginForm";
-import { RegisterForm } from "../../components/RegisterForm/RegisterForm";
+import { AuthToggle } from "../../features/auth/AuthToggle/AuthToggle";
+import { LoginForm } from "../../features/auth/LoginForm/LoginForm";
+import { RegisterForm } from "../../features/auth/RegisterForm/RegisterForm";
 import { useAuth } from "../../features/auth/AuthContext";
 
 export const AuthPage: FC = () => {
@@ -22,7 +22,7 @@ export const AuthPage: FC = () => {
     try {
       await login(credentials);
       navigate("/dashboard");
-    } catch (err) {
+    } catch {
       // Error is already set in auth context and displayed in form
     }
   };
@@ -37,7 +37,7 @@ export const AuthPage: FC = () => {
     try {
       await register(credentials);
       navigate("/dashboard");
-    } catch (err) {
+    } catch {
       // Error is handled in hook and displayed in form
     }
   };
@@ -87,7 +87,7 @@ export const AuthPage: FC = () => {
           <p>
             By continuing, you agree to our
             {/* Ignore because no href is provided, no valid link */}
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            {/* eslint-disable-next-line */}
             <a
               href="#"
               className="text-decoration-none"
@@ -97,7 +97,7 @@ export const AuthPage: FC = () => {
             </a>{" "}
             and
             {/* Ignore because no href is provided, no valid link */}
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            {/* eslint-disable-next-line */}
             <a
               href="#"
               className="text-decoration-none"

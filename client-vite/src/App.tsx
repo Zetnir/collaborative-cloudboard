@@ -4,14 +4,18 @@ import { AuthProvider } from "./features/auth/AuthProvider";
 import { ProtectedRoute } from "./features/auth/ProtectedRoute/ProtectedRoute";
 import { AuthPage } from "./pages/AuthPage/AuthPage";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
+import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
+import { BoardAddEdit } from "./pages/BoardAddEdit/BoardAddEdit";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Default Route */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
           {/* Auth Routes */}
-          <Route path="/" element={<Navigate to="/auth" replace />} />
           <Route path="/auth" element={<AuthPage />} />
 
           {/* Protected Routes */}
@@ -22,10 +26,14 @@ function App() {
                 <Dashboard />
               </ProtectedRoute>
             }
-          />
+          ></Route>
+          <Route path="/dashboard/add-edit" element={<BoardAddEdit />} />
 
-          {/* Catch all - redirect to auth */}
-          <Route path="*" element={<Navigate to="/auth" replace />} />
+          {/* Error Route */}
+          <Route path="/error" element={<ErrorPage />} />
+
+          {/* Catch all - redirect to error page */}
+          <Route path="*" element={<Navigate to="/error" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
