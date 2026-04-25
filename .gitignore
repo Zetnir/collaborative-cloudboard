@@ -1,21 +1,20 @@
-# Ignore all environment files everywhere
-*.env
-*.env.*
+# ============================================
+# GLOBAL IGNORE (applies to root, client, server)
+# ============================================
+
+# Environment variables
 .env
 .env.*
-
-# Node modules
-node_modules/
+*.env
+*.env.*
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-
-# Build outputs
-dist/
-build/
+lerna-debug.log*
+logs
+*.log
 
 # OS files
 .DS_Store
@@ -24,7 +23,75 @@ Thumbs.db
 # Editor folders
 .vscode/
 .idea/
+*.swp
 
-# Local environment overrides
+# Node modules (root or nested)
+node_modules/
+
+# ============================================
+# FRONTEND (React + Vite)
+# ============================================
+
+# Vite build output
+dist/
+dist-ssr/
 *.local
-*.github
+
+# Vite cache
+.vite/
+
+# React build output (if using CRA somewhere)
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# ============================================
+# BACKEND (Node.js / Express / TS)
+# ============================================
+
+# Build output
+server/dist/
+server/build/
+backend/dist/
+backend/build/
+
+# TypeScript
+server/*.tsbuildinfo
+backend/*.tsbuildinfo
+
+# PM2 logs
+.pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+
+# Local database files
+*.sqlite
+*.db
+*.db-journal
+
+# ============================================
+# OPTIONAL: Docker
+# ============================================
+
+docker-data/
+docker-compose.override.yml
+
+# ============================================
+# OPTIONAL: Testing
+# ============================================
+
+coverage/
+.nyc_output/
+jest-cache/
+jest-html-reporters-*
+
+# ============================================
+# OPTIONAL: Agents
+# ============================================
+
+.github/agents/
