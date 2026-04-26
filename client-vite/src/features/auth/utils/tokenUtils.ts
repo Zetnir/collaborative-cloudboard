@@ -1,7 +1,7 @@
 // src/utils/tokenUtils.ts
 
 import { jwtDecode } from "jwt-decode";
-import { JWTPayload } from "../types/auth.types";
+import { JWTPayload } from "../features/auth/types/auth.types";
 
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";

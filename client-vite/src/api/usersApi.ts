@@ -1,7 +1,7 @@
 // src/api/authApi.ts
 
 import axiosInstance from "./axiosInstance";
-import type { User } from "../types/auth.types";
+import type { User } from "../features/auth/types/auth.types";
 
 export const usersApi = {
   getAll: async (): Promise<User[]> => {

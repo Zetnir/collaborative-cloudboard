@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useAuth } from "../../features/auth/AuthContext";
+import { useAuth } from "../../features/auth/hooks/AuthContext";
 import { useNavigate } from "react-router";
 import "./Dashboard.scss";
 import { BoardList } from "../../features/boards/BoardList/BoardList";

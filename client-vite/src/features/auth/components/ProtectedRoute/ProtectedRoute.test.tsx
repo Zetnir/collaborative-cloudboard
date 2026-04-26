@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 
 jest.mock("../AuthContext");
 

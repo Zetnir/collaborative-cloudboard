@@ -1,18 +1,18 @@
 import { useState, ReactNode, useCallback, useEffect, useMemo } from "react";
-import { AuthContext } from "./AuthContext";
-import { authApi } from "../../api/authApi";
+import { AuthContext } from "./hooks/AuthContext";
+import { authApi } from "./api/authApi";
 import {
   setTokens,
   getAccessToken,
   getRefreshToken,
   clearTokens,
   isTokenExpired,
-} from "../../utils/tokenUtils";
+} from "./utils/tokenUtils";
 import type {
   LoginCredentials,
   RegisterCredentials,
   AuthState,
-} from "../../types/auth.types";
+} from "./types/auth.types";
 import { AxiosError } from "axios";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

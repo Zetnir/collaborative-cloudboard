@@ -1,5 +1,5 @@
 import { FC, FormEvent, useState } from "react";
-import { RegisterCredentials } from "../../../types/auth.types";
+import { RegisterCredentials } from "../../types/auth.types";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface RegisterFormProps {
@@ -8,12 +8,16 @@ interface RegisterFormProps {
   error: string | null;
 }
 
+interface RegisterFormData extends RegisterCredentials {
+  confirmPassword: string;
+}
+
 export const RegisterForm: FC<RegisterFormProps> = ({
   onSubmit,
   isLoading,
   error,
 }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     username: "",
     email: "",
     password: "",
@@ -23,7 +27,6 @@ export const RegisterForm: FC<RegisterFormProps> = ({
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +53,18 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       return;
     }
 
-    const { confirmPassword, ...credentials } = formData;
-    await onSubmit(credentials as RegisterCredentials);
+    // Need to seperate confirmPassword from formData
+    await onSubmit(formatCredentials(formData));
+  };
+
+  const formatCredentials = (data: RegisterFormData) => {
+    return {
+      username: data.username || "",
+      email: data.email || "",
+      password: data.password || "",
+      firstName: data.firstName || "",
+      lastName: data.lastName || "",
+    } as RegisterCredentials;
   };
 
   return (

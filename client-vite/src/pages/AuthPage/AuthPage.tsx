@@ -5,10 +5,10 @@ import { useNavigate } from "react-router";
 import { FaCloud } from "react-icons/fa";
 
 // Components
-import { AuthToggle } from "../../features/auth/AuthToggle/AuthToggle";
-import { LoginForm } from "../../features/auth/LoginForm/LoginForm";
-import { RegisterForm } from "../../features/auth/RegisterForm/RegisterForm";
-import { useAuth } from "../../features/auth/AuthContext";
+import { AuthToggle } from "../../features/auth/components/AuthToggle/AuthToggle";
+import { LoginForm } from "../../features/auth/components/LoginForm/LoginForm";
+import { RegisterForm } from "../../features/auth/components/RegisterForm/RegisterForm";
+import { useAuth } from "../../features/auth/hooks/AuthContext";
 
 export const AuthPage: FC = () => {
   const [isLogin, setIsLogin] = useState(true);

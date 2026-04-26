@@ -3,9 +3,9 @@ import "./CreateBoardModal.scss";
 import TomSelect from "tom-select";
 import "tom-select/dist/css/tom-select.css";
 import { usersApi } from "../../../api/usersApi";
-import { User } from "../../../types/auth.types";
+import { User } from "../../auth/types/auth.types";
 import { Project, projectsApi } from "../../../api/projectsApi";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../auth/hooks/AuthContext";
 import { toast } from "react-toastify";
 
 interface ProjectFormData {
