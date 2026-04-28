@@ -1,6 +1,13 @@
 import { FC, FormEvent, useState } from "react";
+
+// types
 import { RegisterCredentials } from "../../types/auth.types";
+
+// icons
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+// styles
+import "./RegisterForm.scss";
 
 interface RegisterFormProps {
   onSubmit: (credentials: RegisterCredentials) => Promise<void>;

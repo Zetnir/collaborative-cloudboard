@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import "./App.scss";
 import { AuthProvider } from "./features/auth/AuthProvider";
-import { ProtectedRoute } from "./features/auth/components/ProtectedRoute/ProtectedRoute";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import { AuthPage } from "./pages/AuthPage/AuthPage";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
 import "react-toastify/dist/ReactToastify.css";
-import { BoardDetails } from "./features/boards/BoardDetails/BoardDetails";
+import { ProjectDetails } from "./features/projects/components/ProjectDetails/ProjectDetails";
 
 function App() {
   return (
@@ -32,7 +32,7 @@ function App() {
             path="/projects/:id"
             element={
               <ProtectedRoute>
-                <BoardDetails />
+                <ProjectDetails />
               </ProtectedRoute>
             }
           />

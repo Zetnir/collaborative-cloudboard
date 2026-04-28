@@ -1,11 +1,14 @@
+// icons
 import { FaCirclePlus } from "react-icons/fa6";
-import "./CreateBoardCard.scss";
 
-export const CreateBoardCard = () => {
+// styles
+import "./NewProjectCard.scss";
+
+export const NewProjectCard = () => {
   return (
     <>
       <div
-        className="card create-board-card d-flex align-items-center justify-content-center"
+        className="card create-project-card d-flex align-items-center justify-content-center"
         style={{
           width: "300px",
           height: "300px",
@@ -17,7 +20,7 @@ export const CreateBoardCard = () => {
         data-bs-target="#exampleModal"
       >
         <FaCirclePlus size={35} className="icon mb-2" />
-        <h4 className="text-muted">Create New Board</h4>
+        <h4 className="text-muted">Create New project</h4>
       </div>
     </>
   );

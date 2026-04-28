@@ -6,7 +6,7 @@ interface DroppableProps {
   children: React.ReactNode;
 }
 
-function Droppable({ id, title, children }: DroppableProps) {
+export function Droppable({ id, title, children }: DroppableProps) {
   const { ref } = useDroppable({
     id,
   });
@@ -15,11 +15,10 @@ function Droppable({ id, title, children }: DroppableProps) {
     <div
       ref={ref}
       style={{
-        width: 290,
+        width: 300,
         height: 600,
-        borderRadius: "10px",
-        backgroundColor: "var(--color-surface)",
-        boxShadow: "0 6px 5px rgba(0, 0, 0, 0.15)",
+        border: "1px solid var(--color-primary)",
+        borderRadius: "20px",
       }}
       className="m-2 container"
     >
@@ -30,5 +29,3 @@ function Droppable({ id, title, children }: DroppableProps) {
     </div>
   );
 }
-
-export default Droppable;

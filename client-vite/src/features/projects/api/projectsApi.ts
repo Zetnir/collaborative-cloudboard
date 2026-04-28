@@ -1,15 +1,7 @@
 // src/api/authApi.ts
 
-import axiosInstance from "./axiosInstance";
-
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  owner: string; // Assuming owner is represented by their ID
-  members: string[]; // Assuming members are represented by their IDs
-  createdAt: string;
-}
+import axiosInstance from "../../../api/axiosInstance";
+import { Project } from "../types/project.types";
 
 export const projectsApi = {
   getAll: async (): Promise<Project[]> => {

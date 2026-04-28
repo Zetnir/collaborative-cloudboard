@@ -1,4 +1,6 @@
 import { createContext, useContext } from "react";
+
+// types
 import type { AuthContextType } from "../types/auth.types";
 
 const defaultAuthContext: AuthContextType = {
@@ -6,7 +8,6 @@ const defaultAuthContext: AuthContextType = {
   isAuthenticated: false,
   isLoading: false,
   error: null,
-  refreshAuth: async () => {},
   login: async () => {},
   register: async () => {},
   logout: () => {},

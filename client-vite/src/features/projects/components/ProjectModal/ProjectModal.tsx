@@ -1,12 +1,20 @@
 import { ChangeEvent, SubmitEvent, useEffect, useRef, useState } from "react";
-import "./CreateBoardModal.scss";
+
+// api
+import { usersApi } from "../../../../api/usersApi";
+
+// types
+import { User } from "../../../auth/types/auth.types";
+import { Project } from "../../types/project.types";
+
+// utils
 import TomSelect from "tom-select";
-import "tom-select/dist/css/tom-select.css";
-import { usersApi } from "../../../api/usersApi";
-import { User } from "../../auth/types/auth.types";
-import { Project, projectsApi } from "../../../api/projectsApi";
-import { useAuth } from "../../auth/hooks/AuthContext";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../auth/hooks/AuthContext";
+
+// styles
+import "./ProjectModal.scss";
+import "tom-select/dist/css/tom-select.css";
 
 interface ProjectFormData {
   name: string;
@@ -14,7 +22,13 @@ interface ProjectFormData {
   members: string[]; // Assuming members are represented by their IDs
 }
 
-export const CreateBoardModal = () => {
+interface ProjectModalProps {
+  onProjectAdd: (
+    projectData: Omit<Project, "id" | "createdAt">,
+  ) => Promise<boolean>;
+}
+
+export const ProjectModal = (props: ProjectModalProps) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -45,11 +59,14 @@ export const CreateBoardModal = () => {
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const project = formatProjectData(formData);
+    const projectData = formatProjectData(formData);
     try {
-      await projectsApi.create(project);
-      toast.success("Board created successfully!");
-      closeModal();
+      const creationSucceed = await props.onProjectAdd(projectData);
+      if (creationSucceed) {
+        toast.success("Board created successfully!");
+        closeModal();
+      }
+
       // Optionally, you can reset the form or close the modal here
     } catch (error) {
       console.error("Error creating project:", error);

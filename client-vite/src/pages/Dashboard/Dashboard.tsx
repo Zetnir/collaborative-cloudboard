@@ -2,9 +2,8 @@ import { FC } from "react";
 import { useAuth } from "../../features/auth/hooks/AuthContext";
 import { useNavigate } from "react-router";
 import "./Dashboard.scss";
-import { BoardList } from "../../features/boards/BoardList/BoardList";
+import { ProjectList } from "../../features/projects/components/ProjectList/ProjectList";
 import { ToastContainer } from "react-toastify";
-import { CreateBoardModal } from "../../features/boards/CreateBoardModal/CreateBoardModal";
 
 export const Dashboard: FC = () => {
   const { user, logout } = useAuth();
@@ -49,11 +48,10 @@ export const Dashboard: FC = () => {
             Add your dashboard content here. This page is protected and only
             accessible to authenticated users.
           </p>
-          <BoardList />
+          <ProjectList />
         </div>
       </div>
 
-      <CreateBoardModal />
       <ToastContainer />
     </div>
   );

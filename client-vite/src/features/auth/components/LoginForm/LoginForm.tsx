@@ -1,6 +1,13 @@
 import { ChangeEvent, SubmitEvent, FC, useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+// types
 import { LoginCredentials } from "../../types/auth.types";
+
+// icons
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+// styles
+import "./LoginForm.scss";
 
 interface LoginFormProps {
   onSubmit: (credentials: LoginCredentials) => Promise<void>;

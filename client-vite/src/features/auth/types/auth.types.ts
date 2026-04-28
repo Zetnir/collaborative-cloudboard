@@ -49,7 +49,6 @@ export interface AuthState {
 export interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
-  refreshAuth: () => Promise<void>;
   logout: () => void;
   clearError: () => void;
 }
