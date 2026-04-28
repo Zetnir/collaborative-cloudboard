@@ -1,23 +1,18 @@
 import { useNavigate, useParams } from "react-router";
 import { BiArrowBack } from "react-icons/bi";
+import { useEffect, useState } from "react";
 
 // api
 import { projectsApi } from "../../api/projectsApi";
 
 // components
-import { Droppable } from "../../../../components/DragAndDrop/Droppable/Droppable";
-import { Draggable } from "../../../../components/DragAndDrop/Draggable/Draggable";
-
-// utils
-import { useEffect, useState } from "react";
-import { DragDropProvider } from "@dnd-kit/react";
+import { TaskBoard } from "../../../tasks/components/TaskBoard/TaskBoard";
 
 // types
 import { Project } from "../../types/project.types";
 
 // styles
 import "./ProjectDetails.scss";
-import { NewTaskCard } from "../../../tasks/components/NewTaskCard/NewTaskCard";
 
 export const ProjectDetails = () => {
   const navigate = useNavigate();
@@ -25,8 +20,6 @@ export const ProjectDetails = () => {
 
   const [loading, setLoading] = useState(true);
   const [project, setProject] = useState<Project | null>(null);
-  const [parent, setParent] = useState<string | undefined>(undefined);
-  const [status, setStatus] = useState<string>("");
 
   const fetchProjectDetails = (id: string) => {
     setLoading(true);
@@ -87,56 +80,8 @@ export const ProjectDetails = () => {
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="details-card mb-4">
-        <div className="card-body">
-          <h5 className="details-card-title">Kanban Board</h5>
-          <div className="container">
-            <div className="d-flex flex-row">
-              <DragDropProvider
-                onDragEnd={(event) => {
-                  if (event.canceled) return;
-                  const targetId = event.operation.target?.id as string;
-                  setStatus(targetId);
-                  setParent(targetId);
-                }}
-              >
-                <div className="d-flex flex-column align-items-center">
-                  <Droppable id={"todo"} title="Todo">
-                    {parent == null || parent === "todo" ? (
-                      <Draggable id={"1"} status={status} />
-                    ) : null}
-                  </Droppable>
-                  <NewTaskCard />
-                </div>
-                <div className="d-flex flex-column align-items-center">
-                  <Droppable id={"in-progress"} title="In Progress">
-                    {parent === "in-progress" ? (
-                      <Draggable id={"1"} status={status} />
-                    ) : null}
-                  </Droppable>
-                  <NewTaskCard />
-                </div>
-                <div className="d-flex flex-column align-items-center">
-                  <Droppable id={"done"} title="Done">
-                    {parent === "done" ? (
-                      <Draggable id={"1"} status={status} />
-                    ) : null}
-                  </Droppable>
-                  <NewTaskCard />
-                </div>
-                <div className="d-flex flex-column align-items-center">
-                  <Droppable id={"blocked"} title="Blocked">
-                    {parent === "blocked" ? (
-                      <Draggable id={"1"} status={status} />
-                    ) : null}
-                  </Droppable>
-                  <NewTaskCard />
-                </div>
-              </DragDropProvider>
-            </div>
-          </div>
-        </div>
+      <div className="mb-2 pb-2">
+        <TaskBoard projectId={id} />
       </div>
     </div>
   );
