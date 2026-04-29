@@ -7,6 +7,9 @@ interface ProjectDTO {
   description?: string;
   owner: string;
   members: string[];
+  access: "private" | "public";
+  workspace: string;
+  coverImgUrl?: string;
   createdAt: Date;
 }
 
@@ -17,6 +20,9 @@ const projectToDto = (project: any): ProjectDTO => {
     description: project.description,
     owner: project.owner.toString(),
     members: project.members.map((member: any) => member.toString()),
+    access: project.access,
+    workspace: project.workspace,
+    coverImgUrl: project.coverImgUrl,
     createdAt: project.createdAt,
   };
 };

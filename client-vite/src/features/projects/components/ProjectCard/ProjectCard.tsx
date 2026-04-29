@@ -7,9 +7,6 @@ import cardImage from "../../../../assets/space-colors.jpeg";
 // types
 import { Project } from "../../types/project.types";
 
-// icons
-import { FaRegTrashAlt } from "react-icons/fa";
-
 // styles
 import "./ProjectCard.scss";
 
@@ -18,7 +15,7 @@ export interface ProjectCardProps {
   onProjectDelete: (id: string) => void;
 }
 
-export const ProjectCard = ({ project, onProjectDelete }: ProjectCardProps) => {
+export const ProjectCard = ({ project }: ProjectCardProps) => {
   const navigate = useNavigate();
 
   const onCardClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -26,30 +23,9 @@ export const ProjectCard = ({ project, onProjectDelete }: ProjectCardProps) => {
     navigate(`/projects/${project.id}`);
   };
 
-  const onDeleteClick = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onProjectDelete(project.id);
-  };
-
   return (
-    <div
-      className="card project-card"
-      style={{ width: "300px", height: "300px" }}
-      onClick={onCardClick}
-    >
-      <div
-        className="card-header position-absolute d-flex justify-content-end w-100"
-        onClick={onDeleteClick}
-      >
-        <FaRegTrashAlt color="var(--color-error)" className="delete-icon" />
-      </div>
-      <img
-        src={cardImage}
-        className="card-img-top"
-        style={{ height: "200px", objectFit: "cover" }}
-        alt="project Image"
-      />
+    <div className="card project-card" onClick={onCardClick}>
+      <img src={cardImage} className="card-img-top" alt="project Image" />
       <div className="card-body">
         <h5 className="ps-2 pb-2">{project.name}</h5>
         <div className="container row pe-0">

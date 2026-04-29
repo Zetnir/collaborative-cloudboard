@@ -1,76 +1,17 @@
-@use "../../styles/theme.scss" as theme;
-
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   background-color: var(--color-surface);
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem; // Using Bootstrap spacing equivalent to mb-5
 }
 
 .dashboard-title {
   font-size: var(--h1-size);
   font-weight: var(--h1-weight);
-  color: var(--color-primary-container);
   line-height: var(--h1-line-height);
   letter-spacing: var(--h1-letter-spacing);
 }
 
-.dashboard-card {
-  background-color: var(--color-surface-container-lowest);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem; // Using Bootstrap spacing equivalent to p-5
-  margin-bottom: 2rem; // Using Bootstrap spacing equivalent to mb-5
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.dashboard-card-title {
-  font-size: var(--h2-size);
-  font-weight: var(--h2-weight);
-  color: var(--color-primary-container);
-  margin-bottom: 1.5rem; // Using Bootstrap spacing equivalent to mb-3
-  line-height: var(--h2-line-height);
-}
-
-.dashboard-welcome-text {
-  color: var(--color-on-surface-variant);
-  margin-bottom: 1.5rem; // Using Bootstrap spacing equivalent to mb-3
-  font-size: var(--body-md-size);
-  line-height: var(--body-md-line-height);
-}
-
-.dashboard-info-box {
-  background-color: var(--color-surface);
-  border-radius: 8px;
-  padding: 1rem; // Using Bootstrap spacing equivalent to p-4
-}
-
-.dashboard-info-text {
-  color: var(--color-on-surface-variant);
-  font-size: var(--body-sm-size);
-  line-height: var(--body-sm-line-height);
-  margin-bottom: 0.5rem; // Using Bootstrap spacing equivalent to mb-2
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  strong {
-    font-weight: 600;
-  }
-}
-
-.dashboard-content-text {
+.dashboard-content {
   color: var(--color-on-surface-variant);
   font-size: var(--body-md-size);
   line-height: var(--body-md-line-height);

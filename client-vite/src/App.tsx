@@ -7,14 +7,14 @@ import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectDetails } from "./features/projects/components/ProjectDetails/ProjectDetails";
-import { TopNavLayout } from "./layout/TopNavLayout";
+import { NavLayout } from "./layout/NavLayout";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route element={<TopNavLayout />}>
+          <Route element={<NavLayout />}>
             {/* Default Route */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             {/* Protected Routes */}

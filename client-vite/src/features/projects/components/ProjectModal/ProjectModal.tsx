@@ -3,6 +3,9 @@ import { ChangeEvent, SubmitEvent, useEffect, useRef, useState } from "react";
 // api
 import { usersApi } from "../../../../api/usersApi";
 
+// components
+import { ImageDropzone } from "../../../../components/ImageDropzone/ImageDropzone";
+
 // types
 import { User } from "../../../auth/types/auth.types";
 import { Project } from "../../types/project.types";
@@ -19,7 +22,10 @@ import "tom-select/dist/css/tom-select.css";
 interface ProjectFormData {
   name: string;
   description: string;
-  members: string[]; // Assuming members are represented by their IDs
+  members: string[];
+  access: "private" | "public";
+  workspace: string;
+  coverImg: File | null;
 }
 
 interface ProjectModalProps {
@@ -29,11 +35,14 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal = (props: ProjectModalProps) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProjectFormData>({
     name: "",
     description: "",
     members: [],
-  } as ProjectFormData);
+    access: "private",
+    workspace: "personal",
+    coverImg: null,
+  });
 
   const { user } = useAuth();
 
@@ -44,10 +53,10 @@ export const ProjectModal = (props: ProjectModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    if (e.target instanceof HTMLSelectElement) {
+    if (e.target instanceof HTMLSelectElement && e.target.multiple) {
       const selectedOptions = Array.from(e.target.selectedOptions).map(
         (option) => option.value,
       );
@@ -79,8 +88,11 @@ export const ProjectModal = (props: ProjectModalProps) => {
     return {
       name: data.name || "Untitled Board",
       description: data.description || "",
-      owner: user?.id || "", // Assuming user is authenticated and has an ID
+      owner: user?.id || "",
       members: data.members || [],
+      access: data.access,
+      workspace: data.workspace,
+      coverImg: data.coverImg,
     } as Omit<Project, "id" | "createdAt">;
   };
 
@@ -93,7 +105,14 @@ export const ProjectModal = (props: ProjectModalProps) => {
   };
 
   const closeModal = () => {
-    setFormData({ name: "", description: "", members: [] });
+    setFormData({
+      name: "",
+      description: "",
+      members: [],
+      access: "private",
+      workspace: "personal",
+      coverImg: null,
+    });
 
     (document.activeElement as HTMLElement)?.blur();
 
@@ -170,14 +189,14 @@ export const ProjectModal = (props: ProjectModalProps) => {
                   <label htmlFor="description" className="form-label">
                     Description
                   </label>
-                  <input
+                  <textarea
                     id="description"
-                    type="text"
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Enter description"
                     required
+                    rows={3}
                     className="form-control"
                   />
                 </div>
@@ -202,6 +221,48 @@ export const ProjectModal = (props: ProjectModalProps) => {
                         </option>
                       ))}
                   </select>
+                </div>
+                <div className="d-flex flex-row gap-4">
+                  <div className="col mb-3">
+                    <label htmlFor="access" className="form-label">
+                      Access
+                    </label>
+                    <select
+                      id="access"
+                      name="access"
+                      value={formData.access}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="private">Private</option>
+                      <option value="public">Public</option>
+                    </select>
+                  </div>
+                  <div className="col mb-3">
+                    <label htmlFor="workspace" className="form-label">
+                      Workspace
+                    </label>
+                    <select
+                      id="workspace"
+                      name="workspace"
+                      value={formData.workspace}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="personal">Personal</option>
+                      <option value="Ti-banjo">Ti-banjo</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Cover Image</label>
+                  <ImageDropzone
+                    value={formData.coverImg}
+                    onChange={(file) =>
+                      setFormData((prev) => ({ ...prev, coverImg: file }))
+                    }
+                  />
                 </div>
               </div>
             </div>

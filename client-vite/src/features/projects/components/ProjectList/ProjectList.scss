@@ -18,21 +18,5 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-  justify-content: center; // center on small screens
-}
-
-// 2 max cards per row on medium screens, left-aligned
-@media (min-width: 768px) {
-  .board-list {
-    justify-content: left; // left-align on desktop
-    max-width: 700px;
-  }
-}
-
-// 3 max cards per row on large screens, left-aligned
-@media (min-width: 1200px) {
-  .board-list {
-    justify-content: left; // left-align on desktop
-    max-width: 1000px;
-  }
+  justify-content: start; // center on small screens
 }

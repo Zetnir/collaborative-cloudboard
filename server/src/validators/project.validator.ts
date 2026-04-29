@@ -6,6 +6,9 @@ const ProjectSchema = z.object({
   description: z.string().optional(),
   owner: z.string().min(1, "Owner ID is required"),
   members: z.array(z.string()).default([]),
+  access: z.enum(["private", "public"]).default("private"),
+  workspace: z.string().default("personal"),
+  coverImgUrl: z.string().url().optional(),
 });
 
 export default ProjectSchema;

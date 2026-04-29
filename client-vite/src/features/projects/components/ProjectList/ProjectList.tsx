@@ -51,7 +51,7 @@ export const ProjectList = () => {
   }, []);
 
   return (
-    <div className="container py-4">
+    <div className="mx-4 py-4">
       <div className="row justify-content-center">
         <div className="board-list">
           <NewProjectCard />

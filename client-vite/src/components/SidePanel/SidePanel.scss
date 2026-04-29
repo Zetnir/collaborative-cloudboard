@@ -1,0 +1,78 @@
+.side-panel {
+  height: calc(100vh - 4rem);
+  border-right: 2px solid rgba(0, 0, 0, 0.1);
+  top: 4rem;
+  position: fixed;
+  width: 260px;
+}
+
+.work-space {
+  background-color: transparent;
+  border: none;
+}
+
+.work-space-icon {
+  background-color: var(--color-primary);
+  height: 40px;
+  width: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.work-space-folder {
+  font-size: var(--h3-size);
+  font-weight: var(--h2-weight);
+  margin-bottom: 0;
+  color: var(--color-on-surface);
+}
+
+.work-space-title {
+  color: var(--color-secondary);
+  margin-bottom: 0;
+}
+
+.create-project-button {
+  background-color: var(--color-primary);
+  border-radius: 15px;
+  border: none;
+  transition: all 0.25s ease;
+
+  span {
+    color: var(--color-on-primary);
+  }
+}
+
+.side-nav-item {
+  display: block;
+  padding: 8px 16px;
+  margin: 10px 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--color-secondary);
+  font-weight: var(--h3-weight);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-surface-container);
+    color: var(--color-on-surface);
+  }
+
+  &.active {
+    background-color: var(--color-surface-container-lowest);
+    color: var(--color-primary);
+    font-weight: var(--h2-weight);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.create-project-button:hover {
+  background-color: var(--color-primary);
+  border-radius: 15px;
+  border: none;
+  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}

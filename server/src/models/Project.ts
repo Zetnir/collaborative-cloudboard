@@ -5,6 +5,9 @@ const projectSchema = new mongoose.Schema({
   description: { type: String },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  access: { type: String, enum: ["private", "public"], default: "private" },
+  workspace: { type: String, default: "personal" },
+  coverImgUrl: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 
