@@ -1,0 +1,51 @@
+.top-nav {
+  background-color: var(--color-surface-container-lowest);
+}
+
+.home-title {
+  font-size: var(--h2-size);
+  font-weight: var(--h1-weight);
+  color: var(--color-primary-container);
+  line-height: var(--h2-line-height);
+  letter-spacing: var(--h2-letter-spacing);
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.nav-button {
+  background-color: transparent;
+  border: none;
+}
+
+.action-button {
+  background-color: transparent;
+  border: none;
+  width: 50px;
+  border-radius: 10px;
+}
+
+.navigation-title {
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+  color: var(--color-secondary);
+  line-height: var(--h3-line-height);
+  letter-spacing: var(--h3-letter-spacing);
+  margin-bottom: 0;
+}
+
+.navigation-title:hover {
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+  color: var(--color-primary-container);
+  line-height: var(--h3-line-height);
+  letter-spacing: var(--h3-letter-spacing);
+  cursor: pointer;
+}
+
+.user-icon {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50px;
+  background-color: var(--color-secondary);
+}

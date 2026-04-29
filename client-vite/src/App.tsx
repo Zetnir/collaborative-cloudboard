@@ -7,35 +7,37 @@ import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectDetails } from "./features/projects/components/ProjectDetails/ProjectDetails";
+import { TopNavLayout } from "./layout/TopNavLayout";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Default Route */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route element={<TopNavLayout />}>
+            {/* Default Route */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/projects/:id"
+              element={
+                <ProtectedRoute>
+                  <ProjectDetails />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
 
           {/* Auth Routes */}
           <Route path="/auth" element={<AuthPage />} />
-
-          {/* Protected Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          ></Route>
-          <Route
-            path="/projects/:id"
-            element={
-              <ProtectedRoute>
-                <ProjectDetails />
-              </ProtectedRoute>
-            }
-          />
 
           {/* Error Route */}
           <Route path="/error" element={<ErrorPage />} />
