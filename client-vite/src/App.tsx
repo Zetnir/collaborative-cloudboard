@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import "./App.scss";
 import { AuthProvider } from "./features/auth/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import { AuthPage } from "./pages/AuthPage/AuthPage";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { ErrorPage } from "./pages/ErrorPage/ErrorPage";
-import "react-toastify/dist/ReactToastify.css";
-import { ProjectDetails } from "./features/projects/components/ProjectDetails/ProjectDetails";
+import { ProjectDetails } from "./pages/ProjectDetails/ProjectDetails";
 import { NavLayout } from "./layout/NavLayout";
+
+import "react-toastify/dist/ReactToastify.css";
+import "./App.scss";
 
 function App() {
   return (

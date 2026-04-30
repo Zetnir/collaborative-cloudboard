@@ -5,9 +5,9 @@ interface TaskDTO {
   id: string;
   title: string;
   description?: string;
-  status: "todo" | "in-progress" | "done";
+  status: string;
   project: string;
-  assignee?: string;
+  assignee?: string | null;
   order: number;
   createdAt: Date;
 }
@@ -27,7 +27,8 @@ const taskToDto = (task: any): TaskDTO => {
 
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
-    const tasks = await Task.find();
+    const filter = req.query.project ? { project: String(req.query.project) } : {};
+    const tasks = await Task.find(filter).sort({ order: 1 });
     return res.status(200).json(tasks.map(taskToDto));
   } catch (error) {
     return res.status(500).json({

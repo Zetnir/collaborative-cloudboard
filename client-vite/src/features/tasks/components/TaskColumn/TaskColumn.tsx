@@ -1,6 +1,7 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { CollisionPriority } from "@dnd-kit/abstract";
+import { BsThreeDots } from "react-icons/bs";
 
 import "./TaskColumn.scss";
 
@@ -31,8 +32,15 @@ export function TaskColumn({ children, id, index, title }: TaskColumnProps) {
       ref={ref}
       style={style}
     >
-      <div className="mb-2" ref={handleRef}>
-        <h4>{title}</h4>
+      <div className="mb-2 d-flex row w-100">
+        <div ref={handleRef} className="col-10 justify-content-start">
+          <h4 className="text-left">{title}</h4>
+        </div>
+        <div className="col-2 d-flex justify-content-end">
+          <button>
+            <BsThreeDots />
+          </button>
+        </div>
       </div>
       <div className="d-flex flex-column gap-2">{children}</div>
     </div>

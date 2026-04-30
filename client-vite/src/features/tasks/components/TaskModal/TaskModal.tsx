@@ -21,20 +21,25 @@ interface TaskFormData {
   project: string;
   status: string;
   assignee: string;
+  priority: string;
+  dueDate: string;
 }
 
 interface TaskModalProps {
   onTaskAdd: (taskData: Omit<Task, "id" | "createdAt">) => Promise<boolean>;
+  columns: string[];
 }
 
-export const TaskModal = (props: TaskModalProps) => {
-  const [formData, setFormData] = useState({
+export const TaskModal = ({ columns, ...props }: TaskModalProps) => {
+  const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
     project: "",
     assignee: "",
     status: "",
-  } as TaskFormData);
+    priority: "",
+    dueDate: "",
+  });
 
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [users, setUsers] = useState<User[] | null>(null);
@@ -74,7 +79,9 @@ export const TaskModal = (props: TaskModalProps) => {
       description: data.description,
       project: data.project,
       assignee: data.assignee,
-      status: data.status,
+      status: data?.status || columns[0],
+      priority: data.priority || undefined,
+      dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
     } as Omit<Task, "id" | "createdAt">;
   };
 
@@ -93,6 +100,8 @@ export const TaskModal = (props: TaskModalProps) => {
       project: "",
       assignee: "",
       status: "",
+      priority: "",
+      dueDate: "",
     });
 
     (document.activeElement as HTMLElement)?.blur();
@@ -180,71 +189,79 @@ export const TaskModal = (props: TaskModalProps) => {
                     className="form-control"
                   />
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="select-assignee" className="form-label">
-                    Assignee
-                  </label>
-                  <select
-                    id="select-assignee"
-                    name="assignee"
-                    value={formData.assignee}
-                    onChange={handleChange}
-                    ref={selectRef}
-                    className="form-control"
-                  >
-                    <option value="">Select assignee</option>
-                    {!loadingUsers &&
-                      users?.map((user) => (
-                        <option key={user.id} value={user.id}>
-                          {user.firstName} {user.lastName}
+                <div className="mb-3 d-flex flex-row">
+                  <div className="col-6 pe-2">
+                    <label htmlFor="select-assignee" className="form-label">
+                      Assignee
+                    </label>
+                    <select
+                      id="select-assignee"
+                      name="assignee"
+                      value={formData.assignee}
+                      onChange={handleChange}
+                      ref={selectRef}
+                      className="form-control"
+                    >
+                      <option value="">Select assignee</option>
+                      {!loadingUsers &&
+                        users?.map((user) => (
+                          <option key={user.id} value={user.id}>
+                            {user.firstName} {user.lastName}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className="col-6 ps-2">
+                    <label htmlFor="dueDate" className="form-label">
+                      Due Date
+                    </label>
+                    <input
+                      id="dueDate"
+                      type="date"
+                      name="dueDate"
+                      value={formData.dueDate}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+                </div>
+                <div className="mb-3 d-flex flex-row">
+                  <div className="col-6 pe-2">
+                    <label htmlFor="status" className="form-label">
+                      Status
+                    </label>
+                    <select
+                      id="status"
+                      name="status"
+                      value={formData.status}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
+                      <option value="">Select status</option>
+                      {columns.map((col) => (
+                        <option key={col} value={col}>
+                          {col.charAt(0).toUpperCase() + col.slice(1)}
                         </option>
                       ))}
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="status" className="form-label">
-                    Status
-                  </label>
-                  <input
-                    id="status"
-                    type="text"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    placeholder="Enter status"
-                    required
-                    className="form-control"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="priotiy" className="form-label">
-                    Priority
-                  </label>
-                  <input
-                    id="priotiy"
-                    type="text"
-                    name="priotiy"
-                    value={formData.title}
-                    onChange={handleChange}
-                    placeholder="Enter priority"
-                    required
-                    className="form-control"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="due-date" className="form-label">
-                    Due Date
-                  </label>
-                  <input
-                    id="due-date"
-                    type="text"
-                    name="due-date"
-                    value={formData.title}
-                    onChange={handleChange}
-                    placeholder="Enter due date"
-                    required
-                    className="form-control"
-                  />
+                    </select>
+                  </div>
+                  <div className="col-6 ps-2">
+                    <label htmlFor="priority" className="form-label">
+                      Priority
+                    </label>
+                    <select
+                      id="priority"
+                      name="priority"
+                      value={formData.priority}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
+                      <option value="">Select priority</option>
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>

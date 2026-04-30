@@ -8,7 +8,7 @@ const ProjectSchema = z.object({
   members: z.array(z.string()).default([]),
   access: z.enum(["private", "public"]).default("private"),
   workspace: z.string().default("personal"),
-  coverImgUrl: z.string().url().optional(),
+  coverImgUrl: z.url().nullish(),
 });
 
 export default ProjectSchema;

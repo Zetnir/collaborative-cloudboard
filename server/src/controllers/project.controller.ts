@@ -9,7 +9,7 @@ interface ProjectDTO {
   members: string[];
   access: "private" | "public";
   workspace: string;
-  coverImgUrl?: string;
+  coverImgUrl?: string | null;
   createdAt: Date;
 }
 

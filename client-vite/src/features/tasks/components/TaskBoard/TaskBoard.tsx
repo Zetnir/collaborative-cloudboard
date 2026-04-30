@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TaskColumn } from "../TaskColumn/TaskColumn";
 import { TaskCard } from "../TaskCard/TaskCard";
 import { DragDropProvider, DragEndEvent, DragOverEvent } from "@dnd-kit/react";
@@ -6,64 +6,54 @@ import { move } from "@dnd-kit/helpers";
 import { NewTaskCard } from "../NewTaskCard/NewTaskCard";
 import { Task } from "../../types/task.types";
 import { TaskModal } from "../TaskModal/TaskModal";
-
-const defaultTasks: Task[] = [
-  {
-    id: "111111",
-    title: "Task 1",
-    description: "desc task 1",
-    status: "todo",
-    project: "12345",
-    assignee: "54321",
-    order: 1,
-    createdAt: new Date(),
-  },
-  {
-    id: "2222222",
-    title: "Task 2",
-    description: "desc task 2",
-    status: "todo",
-    project: "12345",
-    assignee: "54321",
-    order: 2,
-    createdAt: new Date(),
-  },
-  {
-    id: "3333333",
-    title: "Task 3",
-    description: "desc task 3",
-    status: "todo",
-    project: "12345",
-    assignee: "54321",
-    order: 3,
-    createdAt: new Date(),
-  },
-];
-
-const defaultItems = {
-  todo: [defaultTasks[0], defaultTasks[2]],
-  "in-progress": [defaultTasks[1]],
-  done: [],
-};
+import { createTask, getTasksByProject } from "../../../../api/tasksApi";
 
 // TODO : Move this to types
 type Items = Record<string, Task[]>;
+
+const EMPTY_ITEMS: Items = { todo: [], "in-progress": [], done: [] };
+
+const groupByStatus = (tasks: Task[]): Items =>
+  tasks.reduce<Items>(
+    (acc, task) => {
+      acc[task.status] = [...(acc[task.status] ?? []), task];
+      return acc;
+    },
+    { ...EMPTY_ITEMS },
+  );
 
 interface TaskBoardProps {
   projectId: string | undefined;
 }
 
 export const TaskBoard = ({ projectId }: TaskBoardProps) => {
-  const [items, setItems] = useState<Items>(defaultItems);
+  const [items, setItems] = useState<Items>(EMPTY_ITEMS);
 
   const style = {};
 
-  const [columnOrder, setColumnOrder] = useState(() => Object.keys(items));
+  const [columnOrder, setColumnOrder] = useState(() =>
+    Object.keys(EMPTY_ITEMS),
+  );
+
+  useEffect(() => {
+    if (!projectId) return;
+    getTasksByProject(projectId).then((tasks) =>
+      setItems(groupByStatus(tasks)),
+    );
+  }, [projectId]);
 
   const onTaskAdd = async (taskData: Omit<Task, "id" | "createdAt">) => {
     if (projectId) taskData = { ...taskData, project: projectId };
-    console.log(taskData);
-    return false;
+    try {
+      const newTask = await createTask(taskData);
+      setItems((prev) => ({
+        ...prev,
+        [newTask.status]: [...prev[newTask.status], newTask],
+      }));
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   // TODO : Add Column
@@ -107,10 +97,8 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
           >
             {items[column].map((task: Task, index: number) => (
               <TaskCard
-                title={task.title}
-                description={task.description}
                 key={task.id}
-                id={task.id}
+                task={task}
                 index={index}
                 column={column}
               />
@@ -120,7 +108,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
         ))}
         {/* <button onClick={addColumn}>Add Column</button> */}
       </div>
-      <TaskModal onTaskAdd={onTaskAdd} />
+      <TaskModal onTaskAdd={onTaskAdd} columns={columnOrder} />
     </DragDropProvider>
   );
 };

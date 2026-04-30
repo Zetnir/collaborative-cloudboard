@@ -1,0 +1,28 @@
+.breadcrumb {
+  // --bs-breadcrumb-divider: ">";
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item {
+  &.active {
+    color: var(--color-primary);
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-secondary);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.title {
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  line-height: var(--h1-line-height);
+  letter-spacing: var(--h1-letter-spacing);
+  padding-left: 15px;
+}
