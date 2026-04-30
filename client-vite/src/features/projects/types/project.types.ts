@@ -6,6 +6,6 @@ export interface Project {
   members: string[];
   access: "private" | "public";
   workspace: string;
-  coverImg: File | null;
+  coverImgUrl: string | null;
   createdAt: string;
 }

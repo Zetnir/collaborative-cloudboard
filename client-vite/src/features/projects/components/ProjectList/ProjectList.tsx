@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 // api
 import { projectsApi } from "../../api/projectsApi";
+import { usersApi } from "../../../../api/usersApi";
 
 // components
 import { ProjectCard } from "../ProjectCard/ProjectCard";
@@ -9,6 +10,7 @@ import { NewProjectCard } from "../NewProjectCard/NewProjectCard";
 
 // types
 import { Project } from "../../types/project.types";
+import { User } from "../../../auth/types/auth.types";
 
 // style
 import "./ProjectList.scss";
@@ -17,6 +19,7 @@ import { ProjectModal } from "../ProjectModal/ProjectModal";
 export const ProjectList = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const onProjectDelete = async (id: string) => {
     await projectsApi.delete(id);
@@ -40,14 +43,18 @@ export const ProjectList = () => {
   };
 
   useEffect(() => {
-    const fetchAllProjects = async () => {
+    const fetchData = async () => {
       setLoading(true);
-      const data = await projectsApi.getAll();
-      setProjects(data);
+      const [projectsData, usersData] = await Promise.all([
+        projectsApi.getAll(),
+        usersApi.getAll(),
+      ]);
+      setProjects(projectsData);
+      setUsers(usersData);
       setLoading(false);
     };
 
-    fetchAllProjects();
+    fetchData();
   }, []);
 
   return (
@@ -61,6 +68,7 @@ export const ProjectList = () => {
                 key={project.id}
                 project={project}
                 onProjectDelete={onProjectDelete}
+                members={users.filter((u) => project.members.includes(u.id))}
               />
             ))}
           <ProjectModal onProjectAdd={onProjectAdd} />

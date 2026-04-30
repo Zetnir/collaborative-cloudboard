@@ -25,7 +25,7 @@ interface ProjectFormData {
   members: string[];
   access: "private" | "public";
   workspace: string;
-  coverImg: File | null;
+  coverImgUrl: string | null;
 }
 
 interface ProjectModalProps {
@@ -41,13 +41,14 @@ export const ProjectModal = (props: ProjectModalProps) => {
     members: [],
     access: "private",
     workspace: "personal",
-    coverImg: null,
+    coverImgUrl: null,
   });
 
   const { user } = useAuth();
 
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const selectRef = useRef<HTMLSelectElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -92,7 +93,7 @@ export const ProjectModal = (props: ProjectModalProps) => {
       members: data.members || [],
       access: data.access,
       workspace: data.workspace,
-      coverImg: data.coverImg,
+      coverImgUrl: data.coverImgUrl,
     } as Omit<Project, "id" | "createdAt">;
   };
 
@@ -111,8 +112,9 @@ export const ProjectModal = (props: ProjectModalProps) => {
       members: [],
       access: "private",
       workspace: "personal",
-      coverImg: null,
+      coverImgUrl: null,
     });
+    setIsUploading(false);
 
     (document.activeElement as HTMLElement)?.blur();
 
@@ -123,6 +125,13 @@ export const ProjectModal = (props: ProjectModalProps) => {
 
     document.getElementById("closeModalButton")?.click();
   };
+
+  useEffect(() => {
+    const ts = selectRef.current?.tomselect;
+    if (!ts) return;
+    if (formData.access === "private") ts.disable();
+    else ts.enable();
+  }, [formData.access]);
 
   useEffect(() => {
     if (!selectRef.current) return;
@@ -212,6 +221,7 @@ export const ProjectModal = (props: ProjectModalProps) => {
                     onChange={handleChange}
                     ref={selectRef}
                     className="form-control"
+                    disabled={formData.access === "private"}
                   >
                     <option value="">Select members</option>
                     {!loadingUsers &&
@@ -258,10 +268,11 @@ export const ProjectModal = (props: ProjectModalProps) => {
                 <div className="mb-3">
                   <label className="form-label">Cover Image</label>
                   <ImageDropzone
-                    value={formData.coverImg}
-                    onChange={(file) =>
-                      setFormData((prev) => ({ ...prev, coverImg: file }))
+                    value={formData.coverImgUrl}
+                    onUploadComplete={(url) =>
+                      setFormData((prev) => ({ ...prev, coverImgUrl: url }))
                     }
+                    onLoadingChange={setIsUploading}
                   />
                 </div>
               </div>
@@ -274,7 +285,11 @@ export const ProjectModal = (props: ProjectModalProps) => {
               >
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isUploading}
+              >
                 Save changes
               </button>
             </div>
