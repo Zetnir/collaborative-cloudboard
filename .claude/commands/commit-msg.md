@@ -10,3 +10,4 @@ allowed-tools: Bash(git *)
 Follow conventional commits format: type(scope): description
 Types: feat, fix, docs, style, refactor, test, chore
 Keep the message under 72 characters.
+Do not add co-authored by [...] at the end
