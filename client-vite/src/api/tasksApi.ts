@@ -14,3 +14,11 @@ export const createTask = async (
   const { data } = await axiosInstance.post<Task>("/tasks", taskData);
   return data;
 };
+
+export const moveTask = async (
+  id: string,
+  payload: { status: string; order: number },
+): Promise<Task> => {
+  const { data } = await axiosInstance.patch<Task>(`/tasks/${id}/move`, payload);
+  return data;
+};

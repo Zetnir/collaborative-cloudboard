@@ -1,26 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TaskColumn } from "../TaskColumn/TaskColumn";
 import { TaskCard } from "../TaskCard/TaskCard";
-import { DragDropProvider, DragEndEvent, DragOverEvent } from "@dnd-kit/react";
+import {
+  DragDropProvider,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+} from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { NewTaskCard } from "../NewTaskCard/NewTaskCard";
 import { Task } from "../../types/task.types";
 import { TaskModal } from "../TaskModal/TaskModal";
-import { createTask, getTasksByProject } from "../../../../api/tasksApi";
+import {
+  createTask,
+  getTasksByProject,
+  moveTask,
+} from "../../../../api/tasksApi";
 
 // TODO : Move this to types
 type Items = Record<string, Task[]>;
 
 const EMPTY_ITEMS: Items = { todo: [], "in-progress": [], done: [] };
 
-const groupByStatus = (tasks: Task[]): Items =>
-  tasks.reduce<Items>(
+const groupByStatus = (tasks: Task[]): Items => {
+  const grouped = tasks.reduce<Items>(
     (acc, task) => {
       acc[task.status] = [...(acc[task.status] ?? []), task];
       return acc;
     },
     { ...EMPTY_ITEMS },
   );
+  Object.values(grouped).forEach((arr) =>
+    arr.sort((a, b) => a.order - b.order),
+  );
+  return grouped;
+};
 
 interface TaskBoardProps {
   projectId: string | undefined;
@@ -28,18 +42,24 @@ interface TaskBoardProps {
 
 export const TaskBoard = ({ projectId }: TaskBoardProps) => {
   const [items, setItems] = useState<Items>(EMPTY_ITEMS);
-
-  const style = {};
-
   const [columnOrder, setColumnOrder] = useState(() =>
     Object.keys(EMPTY_ITEMS),
   );
 
+  const itemsRef = useRef(items);
+  const dragSourceColumnRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
   useEffect(() => {
     if (!projectId) return;
-    getTasksByProject(projectId).then((tasks) =>
-      setItems(groupByStatus(tasks)),
-    );
+    const fetchTasks = async () => {
+      const tasks = await getTasksByProject(projectId);
+      setItems(groupByStatus(tasks));
+    };
+    fetchTasks();
   }, [projectId]);
 
   const onTaskAdd = async (taskData: Omit<Task, "id" | "createdAt">) => {
@@ -56,38 +76,61 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
     }
   };
 
-  // TODO : Add Column
-  // const [index, setIndex] = useState(0);
-  // const addColumn = () => {
-  //   const columnName = index;
-  //   setIndex((prev) => prev + 1);
-  //   let newColumns: Record<string, Task[]>;
-  //   setItems((prev) => {
-  //     newColumns = { ...prev, [columnName]: [] };
-  //     return newColumns;
-  //   });
-  //   setColumnOrder(() => Object.keys(newColumns));
-  //   console.log(items);
-  // };
+  const onDragStart = (event: DragStartEvent) => {
+    const { source } = event.operation;
+    if (source?.type === "column") return;
+    const taskId = source?.id as string;
+    for (const [status, tasks] of Object.entries(itemsRef.current)) {
+      if (tasks.some((t) => t.id === taskId)) {
+        dragSourceColumnRef.current = status;
+        break;
+      }
+    }
+  };
 
   const onDragOver = (event: DragOverEvent) => {
     const { source } = event.operation;
     // Drag over only if item
-    if (source?.type == "column") return;
+    if (source?.type === "column") return;
     setItems((items) => move(items, event));
   };
 
   const onDragEnd = (event: DragEndEvent) => {
     const { source } = event.operation;
-    // Drag end only if not a column
-    if (event.canceled || source?.type !== "column") return;
+    if (event.canceled) return;
 
-    setColumnOrder((columns) => move(columns, event));
+    if (source?.type === "column") {
+      setColumnOrder((columns) => move(columns, event));
+      return;
+    }
+
+    const taskId = source?.id as string;
+    const currentItems = itemsRef.current;
+    let targetColumn: string | null = null;
+    for (const [status, tasks] of Object.entries(currentItems)) {
+      if (tasks.some((t) => t.id === taskId)) {
+        targetColumn = status;
+        break;
+      }
+    }
+    const affectedColumns = new Set(
+      [dragSourceColumnRef.current, targetColumn].filter(Boolean) as string[],
+    );
+    for (const status of affectedColumns) {
+      currentItems[status].forEach((task, order) => {
+        moveTask(task.id, { status, order }).catch(console.error);
+      });
+    }
+    dragSourceColumnRef.current = null;
   };
 
   return (
-    <DragDropProvider onDragOver={onDragOver} onDragEnd={onDragEnd}>
-      <div className="d-flex flex-row" style={style}>
+    <DragDropProvider
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
+    >
+      <div className="d-flex flex-row">
         {columnOrder.map((column: string, columnIndex: number) => (
           <TaskColumn
             key={column}
@@ -106,7 +149,6 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
             <NewTaskCard />
           </TaskColumn>
         ))}
-        {/* <button onClick={addColumn}>Add Column</button> */}
       </div>
       <TaskModal onTaskAdd={onTaskAdd} columns={columnOrder} />
     </DragDropProvider>

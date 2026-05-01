@@ -61,13 +61,11 @@ export const TaskModal = ({ columns, ...props }: TaskModalProps) => {
     try {
       const creationSucceed = await props.onTaskAdd(taskData);
       if (creationSucceed) {
-        toast.success("Board created successfully!");
+        toast.success("Task created successfully!");
         closeModal();
       }
-
-      // Optionally, you can reset the form or close the modal here
     } catch (error) {
-      console.error("Error creating project:", error);
+      console.error("Error creating task:", error);
       toast.error("Failed to create board.");
       closeModal();
     }
@@ -87,10 +85,9 @@ export const TaskModal = ({ columns, ...props }: TaskModalProps) => {
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
-    usersApi.getAll().then((users) => {
-      setUsers(users);
-      setLoadingUsers(false);
-    });
+    const users = await usersApi.getAll();
+    setUsers(users);
+    setLoadingUsers(false);
   };
 
   const closeModal = () => {

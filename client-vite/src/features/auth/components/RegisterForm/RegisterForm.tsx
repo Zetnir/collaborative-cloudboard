@@ -60,7 +60,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       return;
     }
 
-    // Need to seperate confirmPassword from formData
+    // Need to separate confirmPassword from formData
     await onSubmit(formatCredentials(formData));
   };
 
@@ -115,7 +115,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           </label>
           <input
             id="username"
-            type="username"
+            type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
@@ -160,7 +160,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             {formData?.password ? (
               <span
                 className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-                style={{ cursor: "pointer" }}
+
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -187,7 +187,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             {formData?.confirmPassword ? (
               <span
                 className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-                style={{ cursor: "pointer" }}
+
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (

@@ -1,4 +1,4 @@
-// src/api/authApi.ts
+// src/features/auth/api/authApi.ts
 
 import axiosInstance from "../../../api/axiosInstance";
 import type {
@@ -54,15 +54,4 @@ export const authApi = {
     return response.data;
   },
 
-  // Password reset endpoints (optional, can be implemented later)
-  //   requestPasswordReset: async (email: string): Promise<void> => {
-  //     await axiosInstance.post("/auth/password/reset-request", { email });
-  //   },
-
-  //   resetPassword: async (token: string, newPassword: string): Promise<void> => {
-  //     await axiosInstance.post("/auth/password/reset", {
-  //       token,
-  //       newPassword,
-  //     });
-  //   },
 };

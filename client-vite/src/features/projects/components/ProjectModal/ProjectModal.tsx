@@ -99,10 +99,9 @@ export const ProjectModal = (props: ProjectModalProps) => {
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
-    usersApi.getAll().then((users) => {
-      setUsers(users);
-      setLoadingUsers(false);
-    });
+    const users = await usersApi.getAll();
+    setUsers(users);
+    setLoadingUsers(false);
   };
 
   const closeModal = () => {

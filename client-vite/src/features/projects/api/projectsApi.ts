@@ -1,4 +1,4 @@
-// src/api/authApi.ts
+// src/features/projects/api/projectsApi.ts
 
 import axiosInstance from "../../../api/axiosInstance";
 import { Project } from "../types/project.types";

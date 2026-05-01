@@ -1,7 +1,7 @@
-import "./TopNav.scss";
 import { RiSettings3Fill } from "react-icons/ri";
 import { FaBell } from "react-icons/fa6";
 import { NavLink } from "react-router";
+import "./TopNav.scss";
 export const TopNav = () => {
   return (
     <div className="d-flex flex-row p-3 top-nav sticky-top">

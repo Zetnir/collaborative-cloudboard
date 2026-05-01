@@ -10,6 +10,8 @@ const taskSchema = new mongoose.Schema({
     required: true,
   },
   assignee: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+  priority: { type: String },
+  dueDate: { type: Date },
   order: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { BsThreeDots } from "react-icons/bs";
@@ -12,7 +12,7 @@ interface TaskColumnProps {
   title: string;
 }
 
-export function TaskColumn({ children, id, index, title }: TaskColumnProps) {
+export const TaskColumn = ({ children, id, index, title }: TaskColumnProps) => {
   const { ref, handleRef } = useSortable({
     id,
     index,
@@ -20,17 +20,10 @@ export function TaskColumn({ children, id, index, title }: TaskColumnProps) {
     collisionPriority: CollisionPriority.Low,
     accept: ["item", "column"],
   });
-  const style = {
-    background: "transparent",
-    width: "300px",
-    minHeight: "300px",
-  };
-
   return (
     <div
-      className="p-2 mx-2 d-flex justify-content-start align-items-center flex-column"
+      className="task-column p-2 mx-2 d-flex justify-content-start align-items-center flex-column"
       ref={ref}
-      style={style}
     >
       <div className="mb-2 d-flex row w-100">
         <div ref={handleRef} className="col-10 justify-content-start">
@@ -45,4 +38,4 @@ export function TaskColumn({ children, id, index, title }: TaskColumnProps) {
       <div className="d-flex flex-column gap-2">{children}</div>
     </div>
   );
-}
+};

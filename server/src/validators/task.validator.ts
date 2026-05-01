@@ -7,6 +7,8 @@ const TaskSchema = z.object({
   status: z.string().default("todo"),
   project: z.string().min(1, "Project ID is required"),
   assignee: z.string().nullable().optional().transform((val) => val === "" ? null : val),
+  priority: z.string().optional(),
+  dueDate: z.coerce.date().optional(),
   order: z.number().default(0),
 });
 

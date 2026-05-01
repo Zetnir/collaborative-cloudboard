@@ -36,7 +36,7 @@ export const ProjectDetails = () => {
   }, [id]);
 
   return (
-    <div className="container">
+    <div className="project-container mx-4 py-4">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">

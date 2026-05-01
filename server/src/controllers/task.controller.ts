@@ -8,6 +8,8 @@ interface TaskDTO {
   status: string;
   project: string;
   assignee?: string | null;
+  priority?: string;
+  dueDate?: Date;
   order: number;
   createdAt: Date;
 }
@@ -20,6 +22,8 @@ const taskToDto = (task: any): TaskDTO => {
     status: task.status,
     project: task.project.toString(),
     assignee: task.assignee ? task.assignee.toString() : undefined,
+    priority: task.priority,
+    dueDate: task.dueDate,
     order: task.order,
     createdAt: task.createdAt,
   };

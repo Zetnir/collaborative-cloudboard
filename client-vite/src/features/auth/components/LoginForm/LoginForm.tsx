@@ -75,7 +75,6 @@ export const LoginForm: FC<LoginFormProps> = ({
             {formData?.password ? (
               <span
                 className="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-                style={{ cursor: "pointer" }}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}

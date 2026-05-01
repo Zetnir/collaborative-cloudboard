@@ -6,7 +6,7 @@ const REFRESH_TOKEN_KEY = "refresh_token";
 
 // Token storage functions
 export const setTokens = (accessToken: string, refreshToken: string): void => {
-  // Store access token in memory or sessionStorage for better security
+  // Store access token in localStorage
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 
   // Refresh token can be stored in localStorage for persistence

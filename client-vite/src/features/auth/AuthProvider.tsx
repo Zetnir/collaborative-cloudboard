@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           error: null,
         });
 
-        // scheduleTokenRefresh(tokens.accessToken);
       } catch (error) {
         const err = error as AxiosError<{ message: string }>;
         const errorMessage =

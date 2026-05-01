@@ -1,8 +1,7 @@
-import { BiPlus } from "react-icons/bi";
-import "./SidePanel.scss";
 import { FaFolder } from "react-icons/fa";
 import { NavLink } from "react-router";
 import { RiSettings3Fill } from "react-icons/ri";
+import "./SidePanel.scss";
 
 export const SidePanel = () => {
   const navClass = ({ isActive }: { isActive: boolean }) =>
