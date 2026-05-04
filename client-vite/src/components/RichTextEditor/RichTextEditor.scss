@@ -1,0 +1,247 @@
+.rte {
+  font-family: var(--font-family-base);
+
+  // ── Fixed toolbar ──────────────────────────────────────────────────────────
+  .rte-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-surface-container-low);
+    border: 1px solid var(--color-outline-variant);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+
+    &__select {
+      height: 28px;
+      padding: 0 var(--space-xs);
+      font-size: var(--body-sm-size);
+      font-family: var(--font-family-base);
+      border: 1px solid var(--color-outline-variant);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface-container-lowest);
+      color: var(--color-on-surface-variant);
+      cursor: pointer;
+      outline: none;
+
+      &:focus {
+        border-color: var(--color-primary);
+      }
+    }
+
+    &__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-on-surface-variant);
+      font-size: var(--body-sm-size);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.12s, color 0.12s;
+
+      &:hover:not(:disabled) {
+        background: var(--color-surface-container);
+        color: var(--color-on-surface);
+      }
+
+      &.is-active {
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+
+        &:hover:not(:disabled) {
+          background: var(--color-primary-container);
+          color: var(--color-on-primary-container);
+        }
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+    }
+
+    &__sep {
+      width: 1px;
+      height: 20px;
+      background: var(--color-outline-variant);
+      margin: 0 var(--space-xs);
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Editor content area ────────────────────────────────────────────────────
+  .rte-content {
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 0 0 var(--radius) var(--radius);
+    min-height: 140px;
+    cursor: text;
+    background: var(--color-surface-container-lowest);
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-surface-dim);
+    }
+
+    .tiptap {
+      padding: var(--space-md) 14px;
+      outline: none;
+      min-height: 140px;
+      font-family: var(--font-family-base);
+      font-size: var(--body-md-size);
+      line-height: var(--body-md-line-height);
+      color: var(--color-on-surface);
+
+      > * + * {
+        margin-top: 0.5em;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 1.5rem;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: var(--h1-size);
+        font-weight: var(--h1-weight);
+        line-height: var(--h1-line-height);
+        letter-spacing: var(--h1-letter-spacing);
+        color: var(--color-on-surface);
+        margin: 0.25em 0 0.1em;
+      }
+
+      h2 {
+        font-size: var(--h2-size);
+        font-weight: var(--h2-weight);
+        line-height: var(--h2-line-height);
+        letter-spacing: var(--h2-letter-spacing);
+        color: var(--color-on-surface);
+        margin: 0.25em 0 0.1em;
+      }
+
+      h3 {
+        font-size: var(--h3-size);
+        font-weight: var(--h3-weight);
+        line-height: var(--h3-line-height);
+        color: var(--color-on-surface);
+        margin: 0.25em 0 0.1em;
+      }
+
+      h4, h5, h6 {
+        color: var(--color-on-surface);
+        margin: 0.25em 0 0.1em;
+        line-height: 1.3;
+      }
+
+      code {
+        background: var(--color-surface-container-low);
+        color: var(--color-primary-container);
+        padding: 1px 5px;
+        border-radius: var(--radius-sm);
+        font-size: 0.875em;
+      }
+
+      pre {
+        background: var(--color-inverse-surface);
+        color: var(--color-inverse-on-surface);
+        border-radius: var(--radius);
+        padding: var(--space-md);
+        font-size: 0.875em;
+        overflow-x: auto;
+
+        code {
+          background: none;
+          color: inherit;
+          padding: 0;
+        }
+      }
+
+      blockquote {
+        border-left: 3px solid var(--color-primary);
+        padding-left: var(--space-md);
+        color: var(--color-secondary);
+        margin: 0;
+        font-style: italic;
+      }
+
+      hr {
+        border: none;
+        border-top: 2px solid var(--color-outline-variant);
+        margin: 0.75em 0;
+      }
+
+      mark {
+        background: #fef08a;
+        border-radius: var(--radius-sm);
+        padding: 0 2px;
+      }
+
+      // Placeholder
+      p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        color: var(--color-outline);
+        pointer-events: none;
+        float: left;
+        height: 0;
+      }
+    }
+  }
+
+  // ── Bubble menu (floating on selection) ───────────────────────────────────
+  .rte-bubble-menu {
+    display: flex;
+    gap: 2px;
+    padding: var(--space-xs);
+    background: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(11, 28, 48, 0.15);
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-on-surface-variant);
+      font-size: var(--body-sm-size);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+
+      &:hover {
+        background: var(--color-surface-container);
+        color: var(--color-on-surface);
+      }
+
+      &.is-active {
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+
+        &:hover:not(:disabled) {
+          background: var(--color-primary-container);
+          color: var(--color-on-primary-container);
+        }
+      }
+    }
+
+    &__sep {
+      width: 1px;
+      background: var(--color-outline-variant);
+      margin: 2px;
+    }
+  }
+}

@@ -16,6 +16,7 @@ import {
   getTasksByProject,
   moveTask,
 } from "../../../../api/tasksApi";
+import { TaskDetails } from "../TaskDetails/TaskDetails";
 
 // TODO : Move this to types
 type Items = Record<string, Task[]>;
@@ -45,6 +46,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
   const [columnOrder, setColumnOrder] = useState(() =>
     Object.keys(EMPTY_ITEMS),
   );
+  const [currentTask, setCurrentTask] = useState<Task>();
 
   const itemsRef = useRef(items);
   const dragSourceColumnRef = useRef<string | null>(null);
@@ -124,6 +126,10 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
     dragSourceColumnRef.current = null;
   };
 
+  const onShowCardDetails = (task: Task) => {
+    setCurrentTask(task);
+  };
+
   return (
     <DragDropProvider
       onDragStart={onDragStart}
@@ -144,6 +150,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
                 task={task}
                 index={index}
                 column={column}
+                onShowCardDetails={onShowCardDetails}
               />
             ))}
             <NewTaskCard />
@@ -151,6 +158,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
         ))}
       </div>
       <TaskModal onTaskAdd={onTaskAdd} columns={columnOrder} />
+      <TaskDetails task={currentTask as Task} />
     </DragDropProvider>
   );
 };
