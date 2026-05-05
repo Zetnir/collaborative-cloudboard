@@ -1,0 +1,97 @@
+.task-details-card {
+  width: 1000px;
+}
+
+.task-content {
+  max-height: calc(100vh - 200px);
+  overflow: auto;
+}
+
+.task-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (min-width: 992px) {
+  .modal-lg,
+  .modal-xl {
+    --bs-modal-width: 1000px;
+  }
+}
+
+.priority-badge {
+  background-color: var(--color-surface-container-high);
+  color: var(--color-secondary);
+}
+
+.status-badge {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.dot-white {
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.sub-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  padding-bottom: 10px;
+}
+
+.comment-row {
+  .member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+    overflow: hidden;
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    margin-right: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .comment-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .comment-time {
+    font-size: 0.9rem;
+    color: var(--color-secondary);
+  }
+
+  .comment-text {
+    font-size: 1rem;
+    color: var(--color-on-surface);
+    background-color: var(--color-surface-container-high);
+    padding: 10px;
+    border-radius: 5px;
+  }
+}
+
+.comment-input {
+  margin-top: 30px;
+}

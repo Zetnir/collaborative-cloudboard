@@ -1,14 +1,79 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Task } from "../../types/task.types";
 import { MdTask } from "react-icons/md";
+import { MdOutlineContentCopy } from "react-icons/md";
 import { RichTextEditor } from "../../../../components/RichTextEditor/RichTextEditor";
+
+import "./TaskDetails.scss";
+import { useLocation } from "react-router";
+import { getPriorityIcon } from "../../../../utils/priority.utils";
+import { beautifyText } from "../../../../utils/text.utils";
+import { tasksApi } from "../../api/tasksApi";
+import { uploadsApi } from "../../../../api/uploadsApi";
+import { CommentsSection } from "./CommentsSection/CommentsSection";
+import { useAuth } from "../../../auth/hooks/AuthContext";
 
 export interface TaskDetailsProps {
   task: Task;
+  onCardUpdate?: (updatedTask: Task) => void;
 }
 
-export const TaskDetails = ({ task }: TaskDetailsProps) => {
+export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const { user } = useAuth();
+  const location = useLocation();
+
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    return () => clearTimeout(saveTimerRef.current);
+  }, [task?.id]);
+
+  const saveDescription = async (newDescription: string) => {
+    await tasksApi
+      .update(task.id, { ...task, description: newDescription })
+      .catch((err) => {
+        console.error("Failed to save description: ", err);
+      });
+    onCardUpdate?.({ ...task, description: newDescription });
+  };
+
+  const saveComment = async (text: string) => {
+    const newComment = {
+      user: user?.id || "",
+      text,
+      createdAt: new Date(),
+    };
+    const updatedComments = [...(task?.comments || []), newComment];
+    console.log({ ...task, comments: updatedComments });
+    await tasksApi
+      .update(task.id, { ...task, comments: updatedComments })
+      .catch((err) => {
+        console.error("Failed to save comment: ", err);
+      });
+    onCardUpdate?.({ ...task, comments: updatedComments });
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).catch((err) => {
+      console.error("Failed to copy text: ", err);
+    });
+  };
+
+  const onDescriptionChange = (newDescription: string) => {
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(
+      () => saveDescription(newDescription),
+      500,
+    );
+  };
+
+  const onCommentSubmit = (newComment: string) => {
+    saveComment(newComment);
+  };
 
   return (
     <div
@@ -21,10 +86,17 @@ export const TaskDetails = ({ task }: TaskDetailsProps) => {
       aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
-        <div className="modal-content">
+        <div className="modal-content task-details-card">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="taskDetailsLabel">
-              Task Details : <MdTask color="var(--color-primary)" /> {task?.id}
+              <MdTask color="var(--color-primary)" /> Task Details : {task?.id}{" "}
+              <button
+                onClick={() =>
+                  copyToClipboard("localhost:5173" + location.pathname)
+                }
+              >
+                <MdOutlineContentCopy />
+              </button>
             </h1>
             <button
               type="button"
@@ -34,65 +106,48 @@ export const TaskDetails = ({ task }: TaskDetailsProps) => {
             />
           </div>
 
-          <div className="modal-body">
+          <div className="modal-body ">
             <div className="d-flex flex-row">
-              <div className="col-8">
+              <div className="col-8 task-content">
                 <div className="d-flex flex-column">
                   <div>
                     <div className="mb-3 p-2">
-                      <h2>{task?.title}</h2>
-                      <div className="d-flex flex-row gap-2 mx-4">
-                        <span className="badge bg-secondary">
-                          {task?.priority}
+                      <h2 className="task-title">
+                        {beautifyText(task?.title)}
+                      </h2>
+                      <div className="d-flex flex-row gap-2 ">
+                        {task?.priority && (
+                          <span className="priority-badge badge p-2 px-3 d-flex align-items-center">
+                            {getPriorityIcon(task?.priority || "")}{" "}
+                            {beautifyText(task?.priority || "")}
+                          </span>
+                        )}
+                        <span className="status-badge badge bg-primary p-2 px-3 d-flex align-items-center">
+                          <div className="dot-white"></div>
+                          {beautifyText(task?.status || "")}
                         </span>
-                        <span className="badge bg-primary">{task?.status}</span>
                       </div>
                     </div>
                     <div className="mx-2 mb-3 p-2">
-                      <h4 className="mb-2">Description</h4>
-                      <div className="mx-3">
+                      <h4 className="mb-2 sub-title">Description</h4>
+                      <div className="me-3">
                         <RichTextEditor
-                          content={task?.description ?? ""}
+                          content={task?.description}
+                          onChange={onDescriptionChange}
+                          onUpload={(file) =>
+                            uploadsApi.upload(file).then((r) => r.secureUrl)
+                          }
                           placeholder="Type your issue description…"
                         />
                       </div>
                     </div>
                   </div>
                   <div className="mx-2 mb-3 p-2">
-                    <h4>Activity & Comments</h4>
-                    <div className="d-flex flex-column mx-3">
-                      {/* Comment */}
-                      <div className="d-flex flex-row">
-                        <div className="col-2">Icon</div>
-                        <div className="col-10 d-flex flex-column">
-                          <div className="d-flex flex-row">
-                            <div className="col-8 d-flex justify-content-start">
-                              <h4>FirstName LastName</h4>
-                            </div>
-                            <div className="col-4 d-flex justify-content-end">
-                              <span>Oct 24, 4:12PM</span>
-                            </div>
-                          </div>
-                          <span>Comment written by user...</span>
-                        </div>
-                      </div>
-                      {/* Comment */}
-
-                      <div className="d-flex flex-row">
-                        <div className="col-2">Icon</div>
-                        <div className="col-10 d-flex flex-column">
-                          <div className="d-flex flex-row">
-                            <div className="col-8 d-flex justify-content-start">
-                              <h4>FirstName LastName</h4>
-                            </div>
-                            <div className="col-4 d-flex justify-content-end">
-                              <span>Oct 24, 4:12PM</span>
-                            </div>
-                          </div>
-                          <span>Comment written by user...</span>
-                        </div>
-                      </div>
-                    </div>
+                    <h4 className="mb-2 sub-title">Activity & Comments</h4>
+                    <CommentsSection
+                      onCommentSubmit={onCommentSubmit}
+                      comments={task?.comments}
+                    />
                   </div>
                 </div>
               </div>

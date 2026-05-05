@@ -4,16 +4,11 @@ import { Task } from "../../types/task.types";
 import { User } from "../../../auth/types/auth.types";
 import { usersApi } from "../../../../api/usersApi";
 
-import {
-  FiChevronDown,
-  FiChevronsDown,
-  FiChevronsUp,
-  FiChevronUp,
-  FiMinus,
-} from "react-icons/fi";
 import { FaRegClock } from "react-icons/fa6";
 
 import "./TaskCard.scss";
+import { getPriorityIcon } from "../../../../utils/priority.utils";
+import { formatDate, formatDateString } from "../../../../utils/text.utils";
 
 interface TaskCardProps {
   task: Task;
@@ -54,41 +49,6 @@ export const TaskCard = ({
     };
   }, [task.assignee]);
 
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case "highest":
-        return (
-          <FiChevronsUp color="var(--color-danger)" size={18} strokeWidth={3} />
-        );
-      case "high":
-        return (
-          <FiChevronUp color="var(--color-danger)" size={18} strokeWidth={3} />
-        );
-      case "medium":
-        return (
-          <FiMinus color="var(--color-secondary)" size={18} strokeWidth={3} />
-        );
-      case "low":
-        return (
-          <FiChevronDown
-            color="var(--color-primary)"
-            size={18}
-            strokeWidth={3}
-          />
-        );
-      case "lowest":
-        return (
-          <FiChevronsDown
-            color="var(--color-primary)"
-            size={18}
-            strokeWidth={3}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div
       className="task-card card my-2"
@@ -114,11 +74,7 @@ export const TaskCard = ({
             <div className="d-flex flex-row">
               <span className="due-date align-items-center d-flex">
                 <FaRegClock className="ms-1 me-2" />
-                {new Date(task?.dueDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                {formatDate(task.dueDate)}
               </span>
             </div>
           ) : null}

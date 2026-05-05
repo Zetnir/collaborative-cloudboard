@@ -11,11 +11,7 @@ import { move } from "@dnd-kit/helpers";
 import { NewTaskCard } from "../NewTaskCard/NewTaskCard";
 import { Task } from "../../types/task.types";
 import { TaskModal } from "../TaskModal/TaskModal";
-import {
-  createTask,
-  getTasksByProject,
-  moveTask,
-} from "../../../../api/tasksApi";
+import { tasksApi } from "../../api/tasksApi";
 import { TaskDetails } from "../TaskDetails/TaskDetails";
 
 // TODO : Move this to types
@@ -58,7 +54,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
   useEffect(() => {
     if (!projectId) return;
     const fetchTasks = async () => {
-      const tasks = await getTasksByProject(projectId);
+      const tasks = await tasksApi.getByProject(projectId);
       setItems(groupByStatus(tasks));
     };
     fetchTasks();
@@ -67,7 +63,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
   const onTaskAdd = async (taskData: Omit<Task, "id" | "createdAt">) => {
     if (projectId) taskData = { ...taskData, project: projectId };
     try {
-      const newTask = await createTask(taskData);
+      const newTask = await tasksApi.create(taskData);
       setItems((prev) => ({
         ...prev,
         [newTask.status]: [...prev[newTask.status], newTask],
@@ -120,7 +116,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
     );
     for (const status of affectedColumns) {
       currentItems[status].forEach((task, order) => {
-        moveTask(task.id, { status, order }).catch(console.error);
+        tasksApi.move(task.id, { status, order }).catch(console.error);
       });
     }
     dragSourceColumnRef.current = null;
@@ -158,7 +154,18 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
         ))}
       </div>
       <TaskModal onTaskAdd={onTaskAdd} columns={columnOrder} />
-      <TaskDetails task={currentTask as Task} />
+      <TaskDetails
+        task={currentTask as Task}
+        onCardUpdate={(updatedTask) => {
+          setCurrentTask(updatedTask);
+          setItems((prev) => ({
+            ...prev,
+            [updatedTask.status]: prev[updatedTask.status].map((t) =>
+              t.id === updatedTask.id ? updatedTask : t,
+            ),
+          }));
+        }}
+      />
     </DragDropProvider>
   );
 };

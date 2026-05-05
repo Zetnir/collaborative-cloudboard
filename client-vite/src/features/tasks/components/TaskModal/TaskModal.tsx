@@ -254,9 +254,11 @@ export const TaskModal = ({ columns, ...props }: TaskModalProps) => {
                       className="form-control"
                     >
                       <option value="">Select priority</option>
+                      <option value="lowest">Lowest</option>
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
                       <option value="high">High</option>
+                      <option value="highest">Highest</option>
                     </select>
                   </div>
                 </div>

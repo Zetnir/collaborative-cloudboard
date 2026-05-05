@@ -1,0 +1,52 @@
+.comment-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: flex-end;
+
+  button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+
+    &.submit {
+      background-color: var(--color-primary-container);
+      color: white;
+
+      &:hover {
+        background-color: var(--color-primary);
+      }
+    }
+
+    &.cancel {
+      background-color: transparent;
+
+      &:hover {
+        background-color: var(--color-surface-dim);
+      }
+    }
+  }
+}
+
+.comment-text {
+  pre {
+    background: var(--color-inverse-surface);
+    color: var(--color-inverse-on-surface);
+    padding: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 14px;
+  }
+
+  code {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    background: var(--color-inverse-surface);
+    color: var(--color-inverse-on-surface);
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+}

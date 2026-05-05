@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { Task } from "../models/Task.js";
 
+interface CommentDTO {
+  user: string;
+  text: string;
+  createdAt: Date;
+}
+
 interface TaskDTO {
   id: string;
   title: string;
@@ -11,6 +17,7 @@ interface TaskDTO {
   priority?: string;
   dueDate?: Date;
   order: number;
+  comments: CommentDTO[];
   createdAt: Date;
 }
 
@@ -25,13 +32,20 @@ const taskToDto = (task: any): TaskDTO => {
     priority: task.priority,
     dueDate: task.dueDate,
     order: task.order,
+    comments: task.comments.map((comment: any) => ({
+      user: comment.user.toString(),
+      text: comment.text,
+      createdAt: comment.createdAt,
+    })),
     createdAt: task.createdAt,
   };
 };
 
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
-    const filter = req.query.project ? { project: String(req.query.project) } : {};
+    const filter = req.query.project
+      ? { project: String(req.query.project) }
+      : {};
     const tasks = await Task.find(filter).sort({ order: 1 });
     return res.status(200).json(tasks.map(taskToDto));
   } catch (error) {
@@ -76,10 +90,8 @@ export const createTask = async (req: Request, res: Response) => {
 export const updateTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const { task } = req.body;
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body);
 
     if (!updatedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -99,9 +111,8 @@ export const moveTask = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { order, status } = req.body;
     const updatedTask = await Task.findByIdAndUpdate(
-      id,
+      { _id: id },
       { order, status },
-      { new: true, runValidators: true },
     );
 
     if (!updatedTask) {
