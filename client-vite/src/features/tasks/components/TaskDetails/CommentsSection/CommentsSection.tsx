@@ -34,45 +34,47 @@ export const CommentsSection = ({
 
   // Prevent XSS by sanitizing comment text before rendering
   const renderedComments = useMemo(() => {
-    return comments?.map((comment, index) => (
-      <div className="d-flex flex-row comment-row mb-3" key={index}>
-        <div className="member-avatar">
-          {user && (
-            <>
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user.firstName} />
-              ) : (
-                <span>
-                  {user.firstName[0]}
-                  {user.lastName[0]}
-                </span>
+    return comments?.length > 0
+      ? comments?.map((comment, index) => (
+          <div className="d-flex flex-row comment-row mb-3" key={index}>
+            <div className="member-avatar">
+              {user && (
+                <>
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.firstName} />
+                  ) : (
+                    <span>
+                      {user.firstName[0]}
+                      {user.lastName[0]}
+                    </span>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </div>
-        <div className="col d-flex flex-column">
-          <div className="d-flex flex-row">
-            <div className="col-8 d-flex justify-content-start">
-              <h4 className="comment-name">
-                {user?.firstName} {user?.lastName}
-              </h4>
             </div>
-            <div className="col-4 d-flex justify-content-end">
-              <span className="comment-time">
-                {formatDateTime(comment?.createdAt)}
-              </span>
+            <div className="col d-flex flex-column">
+              <div className="d-flex flex-row">
+                <div className="col-8 d-flex justify-content-start">
+                  <h4 className="comment-name">
+                    {user?.firstName} {user?.lastName}
+                  </h4>
+                </div>
+                <div className="col-4 d-flex justify-content-end">
+                  <span className="comment-time">
+                    {formatDateTime(comment?.createdAt)}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className="comment-text px-3"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(comment?.text),
+                }}
+              />
             </div>
           </div>
-
-          <div
-            className="comment-text px-3"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(comment?.text),
-            }}
-          />
-        </div>
-      </div>
-    ));
+        ))
+      : null;
   }, [comments, user]);
 
   return (

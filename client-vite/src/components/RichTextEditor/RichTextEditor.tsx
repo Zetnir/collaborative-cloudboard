@@ -49,12 +49,20 @@ export const RichTextEditor = ({
         );
         if (!files.length || !onUploadRef.current) return false;
         dragEvent.preventDefault();
-        const coordPos = view.posAtCoords({ left: dragEvent.clientX, top: dragEvent.clientY });
+        const coordPos = view.posAtCoords({
+          left: dragEvent.clientX,
+          top: dragEvent.clientY,
+        });
         files.forEach(async (file) => {
           const url = await onUploadRef.current!(file);
           const node = view.state.schema.nodes.image?.create({ src: url });
           if (!node) return;
-          view.dispatch(view.state.tr.insert(coordPos?.pos ?? view.state.doc.content.size, node));
+          view.dispatch(
+            view.state.tr.insert(
+              coordPos?.pos ?? view.state.doc.content.size,
+              node,
+            ),
+          );
         });
         return true;
       },
@@ -82,12 +90,18 @@ export const RichTextEditor = ({
     editor.commands.setContent(content ?? "");
   }, [content, editor]);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !onUpload) return;
     event.target.value = "";
     const url = await onUpload(file);
-    editor?.chain().focus().insertContent({ type: "image", attrs: { src: url } }).run();
+    editor
+      ?.chain()
+      .focus()
+      .insertContent({ type: "image", attrs: { src: url } })
+      .run();
   };
 
   return (
@@ -96,7 +110,9 @@ export const RichTextEditor = ({
         <>
           <Toolbar
             editor={editor}
-            onFileClick={onUpload ? () => fileInputRef.current?.click() : undefined}
+            onFileClick={
+              onUpload ? () => fileInputRef.current?.click() : undefined
+            }
           />
           <BubbleMenu editor={editor} className="rte-bubble-menu">
             <BubbleMenuContent editor={editor} />
