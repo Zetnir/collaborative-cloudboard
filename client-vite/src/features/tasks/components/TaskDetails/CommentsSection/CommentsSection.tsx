@@ -34,9 +34,11 @@ export const CommentsSection = ({
 
   // Prevent XSS by sanitizing comment text before rendering
   const renderedComments = useMemo(() => {
-    return comments?.length > 0
-      ? comments?.map((comment, index) => (
-          <div className="d-flex flex-row comment-row mb-3" key={index}>
+    return comments?.map((comment) => (
+          <div
+            className="d-flex flex-row comment-row mb-3"
+            key={`${comment.user}-${comment.createdAt}`}
+          >
             <div className="member-avatar">
               {user && (
                 <>
@@ -73,8 +75,7 @@ export const CommentsSection = ({
               />
             </div>
           </div>
-        ))
-      : null;
+        ));
   }, [comments, user]);
 
   return (

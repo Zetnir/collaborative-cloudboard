@@ -34,27 +34,29 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
   );
 
   useEffect(() => {
+    let cancelled = false;
     setIsEditingDescription(false);
     setDescription(task?.description);
     if (task?.assignee) {
-      loadAssignee(task.assignee);
+      usersApi
+        .getById(task.assignee)
+        .then((result) => {
+          if (!cancelled) setAssignee(result);
+        })
+        .catch((err) => {
+          console.error("Failed to load assignee:", err);
+        });
     } else {
       setAssignee(undefined);
     }
-    return () => clearTimeout(saveTimerRef.current);
+    return () => {
+      cancelled = true;
+      clearTimeout(saveTimerRef.current);
+    };
   }, [task?.id, task?.assignee]);
 
-  const loadAssignee = async (id: string) => {
-    const result = await usersApi.getById(id);
-    setAssignee(result);
-  };
-
   const saveDescription = async (newDescription: string) => {
-    await tasksApi
-      .update(task.id, { ...task, description: newDescription })
-      .catch((err) => {
-        console.error("Failed to save description: ", err);
-      });
+    await tasksApi.update(task.id, { ...task, description: newDescription });
     onCardUpdate?.({ ...task, description: newDescription });
   };
 
@@ -83,10 +85,11 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
   const onDescriptionChange = (newDescription: string) => {
     clearTimeout(saveTimerRef.current);
     setDescription(newDescription);
-    saveTimerRef.current = setTimeout(
-      () => saveDescription(newDescription),
-      500,
-    );
+    saveTimerRef.current = setTimeout(() => {
+      saveDescription(newDescription).catch((err) => {
+        console.error("Failed to autosave description:", err);
+      });
+    }, 500);
   };
 
   const onCommentSubmit = (newComment: string) => {
@@ -152,7 +155,7 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
                         {isEditingDescription ? (
                           <>
                             <RichTextEditor
-                              content={task?.description}
+                              content={description}
                               onChange={onDescriptionChange}
                               onUpload={(file) =>
                                 uploadsApi.upload(file).then((r) => r.secureUrl)
@@ -163,6 +166,8 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
                               <button
                                 className="cancel"
                                 onClick={() => {
+                                  clearTimeout(saveTimerRef.current);
+                                  setDescription(task?.description);
                                   setIsEditingDescription(false);
                                 }}
                               >
@@ -170,9 +175,16 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
                               </button>
                               <button
                                 className="submit"
-                                onClick={() => {
-                                  saveDescription(description || "");
-                                  setIsEditingDescription(false);
+                                onClick={async () => {
+                                  try {
+                                    await saveDescription(description || "");
+                                    setIsEditingDescription(false);
+                                  } catch (err) {
+                                    console.error(
+                                      "Failed to save description:",
+                                      err,
+                                    );
+                                  }
                                 }}
                               >
                                 Save
@@ -183,12 +195,19 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
                           <div
                             className="description-text description-preview"
                             onClick={() => setIsEditingDescription(true)}
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                task?.description ||
-                                '<p class="description-placeholder">Add a description…</p>',
-                            }}
-                          />
+                          >
+                            {task?.description ? (
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: task.description,
+                                }}
+                              />
+                            ) : (
+                              <p className="description-placeholder">
+                                Add a description…
+                              </p>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>

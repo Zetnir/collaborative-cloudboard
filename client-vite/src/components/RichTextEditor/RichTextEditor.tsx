@@ -53,17 +53,19 @@ export const RichTextEditor = ({
           left: dragEvent.clientX,
           top: dragEvent.clientY,
         });
-        files.forEach(async (file) => {
-          const url = await onUploadRef.current!(file);
-          const node = view.state.schema.nodes.image?.create({ src: url });
-          if (!node) return;
-          view.dispatch(
-            view.state.tr.insert(
-              coordPos?.pos ?? view.state.doc.content.size,
-              node,
-            ),
-          );
-        });
+        Promise.all(
+          files.map(async (file) => {
+            const url = await onUploadRef.current!(file);
+            const node = view.state.schema.nodes.image?.create({ src: url });
+            if (!node) return;
+            view.dispatch(
+              view.state.tr.insert(
+                coordPos?.pos ?? view.state.doc.content.size,
+                node,
+              ),
+            );
+          }),
+        ).catch((err) => console.error("Image upload failed:", err));
         return true;
       },
       handlePaste: (view, event) => {
@@ -72,14 +74,16 @@ export const RichTextEditor = ({
           (item) => item.type.startsWith("image/"),
         );
         if (!items.length || !onUploadRef.current) return false;
-        items.forEach(async (item) => {
-          const file = item.getAsFile();
-          if (!file || !onUploadRef.current) return;
-          const url = await onUploadRef.current(file);
-          const node = view.state.schema.nodes.image?.create({ src: url });
-          if (!node) return;
-          view.dispatch(view.state.tr.replaceSelectionWith(node));
-        });
+        Promise.all(
+          items.map(async (item) => {
+            const file = item.getAsFile();
+            if (!file || !onUploadRef.current) return;
+            const url = await onUploadRef.current(file);
+            const node = view.state.schema.nodes.image?.create({ src: url });
+            if (!node) return;
+            view.dispatch(view.state.tr.replaceSelectionWith(node));
+          }),
+        ).catch((err) => console.error("Image upload failed:", err));
         return true;
       },
     },
