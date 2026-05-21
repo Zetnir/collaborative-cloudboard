@@ -22,10 +22,10 @@ export const TaskColumn = ({ children, id, index, title }: TaskColumnProps) => {
   });
   return (
     <div
-      className="task-column p-2 mx-2 d-flex justify-content-start align-items-center flex-column"
+      className="task-column card p-2 mx-2 d-flex justify-content-start align-items-center flex-column"
       ref={ref}
     >
-      <div className="mb-2 d-flex row w-100">
+      <div className="mb-2 d-flex row w-100 column-header">
         <div ref={handleRef} className="col-10 justify-content-start">
           <h4 className="text-left">{title}</h4>
         </div>
@@ -35,7 +35,7 @@ export const TaskColumn = ({ children, id, index, title }: TaskColumnProps) => {
           </button>
         </div>
       </div>
-      <div className="d-flex flex-column gap-2">{children}</div>
+      <div className="d-flex flex-column column-body gap-2">{children}</div>
     </div>
   );
 };

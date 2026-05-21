@@ -13,25 +13,16 @@ import { Task } from "../../types/task.types";
 import { TaskModal } from "../TaskModal/TaskModal";
 import { tasksApi } from "../../api/tasksApi";
 import { TaskDetails } from "../TaskDetails/TaskDetails";
+import { NewColumnCard } from "../NewColumnCard/NewColumnCard";
+
+import "./TaskBoard.scss";
+import { projectsApi } from "../../../projects/api/projectsApi";
+import { Project } from "../../../projects/types/project.types";
 
 // TODO : Move this to types
 type Items = Record<string, Task[]>;
 
-const EMPTY_ITEMS: Items = { todo: [], "in-progress": [], done: [] };
-
-const groupByStatus = (tasks: Task[]): Items => {
-  const grouped = tasks.reduce<Items>(
-    (acc, task) => {
-      acc[task.status] = [...(acc[task.status] ?? []), task];
-      return acc;
-    },
-    { ...EMPTY_ITEMS },
-  );
-  Object.values(grouped).forEach((arr) =>
-    arr.sort((a, b) => a.order - b.order),
-  );
-  return grouped;
-};
+const EMPTY_ITEMS: Items = {};
 
 interface TaskBoardProps {
   projectId: string | undefined;
@@ -39,9 +30,8 @@ interface TaskBoardProps {
 
 export const TaskBoard = ({ projectId }: TaskBoardProps) => {
   const [items, setItems] = useState<Items>(EMPTY_ITEMS);
-  const [columnOrder, setColumnOrder] = useState(() =>
-    Object.keys(EMPTY_ITEMS),
-  );
+  const [project, setProject] = useState<Project | null>(null);
+  const [columns, setColumns] = useState<string[]>([]);
   const [currentTask, setCurrentTask] = useState<Task>();
 
   const itemsRef = useRef(items);
@@ -51,14 +41,48 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
     itemsRef.current = items;
   }, [items]);
 
+  const groupItemsByColumn = (tasks: Task[], _columns: string[]): Items => {
+    return tasks.reduce<Items>(
+      (acc, task) => {
+        acc[task.status] = [...(acc[task.status] ?? []), task];
+        return acc;
+      },
+      { ..._columns.reduce((acc, column) => ({ ...acc, [column]: [] }), {}) },
+    );
+  };
+
   useEffect(() => {
     if (!projectId) return;
-    const fetchTasks = async () => {
-      const tasks = await tasksApi.getByProject(projectId);
-      setItems(groupByStatus(tasks));
+
+    const fetchAll = async () => {
+      const [result, tasks] = await Promise.all([
+        projectsApi.getById(projectId),
+        tasksApi.getByProject(projectId),
+      ]);
+      const cols = result?.columns ?? [];
+      setProject(result);
+      setColumns(cols);
+      setItems(groupItemsByColumn(tasks, cols));
     };
-    fetchTasks();
+
+    fetchAll();
   }, [projectId]);
+
+  const onColumnAdd = async (columnName: string) => {
+    if (!projectId) return false;
+    try {
+      const updatedProject = await projectsApi.update(projectId, {
+        ...project,
+        columns: [...columns, columnName],
+      });
+      setColumns(updatedProject.columns ?? []);
+      setItems((prev) => ({ ...prev, [columnName]: [] }));
+      setProject(updatedProject);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const onTaskAdd = async (taskData: Omit<Task, "id" | "createdAt">) => {
     if (projectId) taskData = { ...taskData, project: projectId };
@@ -98,7 +122,11 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
     if (event.canceled) return;
 
     if (source?.type === "column") {
-      setColumnOrder((columns) => move(columns, event));
+      const newColumns = move(columns, event);
+      setColumns(newColumns);
+      projectsApi
+        .move(projectId as string, { columns: newColumns })
+        .catch(console.error);
       return;
     }
 
@@ -133,7 +161,7 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
       onDragEnd={onDragEnd}
     >
       <div className="d-flex flex-row">
-        {columnOrder.map((column: string, columnIndex: number) => (
+        {columns.map((column: string, columnIndex: number) => (
           <TaskColumn
             key={column}
             id={column}
@@ -152,8 +180,11 @@ export const TaskBoard = ({ projectId }: TaskBoardProps) => {
             <NewTaskCard />
           </TaskColumn>
         ))}
+        <div className="new-column-container d-flex align-items-start">
+          <NewColumnCard onAddColumn={onColumnAdd} />
+        </div>
       </div>
-      <TaskModal onTaskAdd={onTaskAdd} columns={columnOrder} />
+      <TaskModal onTaskAdd={onTaskAdd} columns={columns} />
       <TaskDetails
         task={currentTask as Task}
         onCardUpdate={(updatedTask) => {

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useEffect, useState } from "react";
 
 // api
@@ -14,7 +14,6 @@ import { Project } from "../../features/projects/types/project.types";
 import "./ProjectDetails.scss";
 
 export const ProjectDetails = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
@@ -35,6 +34,16 @@ export const ProjectDetails = () => {
     getProjectDetails(id as string);
   }, [id]);
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="project-container mx-4 py-4">
       <nav aria-label="breadcrumb">
@@ -48,7 +57,7 @@ export const ProjectDetails = () => {
         </ol>
       </nav>
       <h2 className="title">{project?.name}</h2>
-      <div className="mb-2 pb-2">
+      <div className="my-2 pb-2">
         <TaskBoard projectId={id} />
       </div>
     </div>

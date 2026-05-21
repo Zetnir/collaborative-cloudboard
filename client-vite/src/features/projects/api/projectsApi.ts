@@ -30,4 +30,15 @@ export const projectsApi = {
   delete: async (id: string): Promise<void> => {
     await axiosInstance.delete(`/projects/${id}`);
   },
+
+  move: async (
+    id: string,
+    payload: { columns: string[] },
+  ): Promise<Project> => {
+    const response = await axiosInstance.patch<Project>(
+      `/projects/${id}/move`,
+      payload,
+    );
+    return response.data;
+  },
 };

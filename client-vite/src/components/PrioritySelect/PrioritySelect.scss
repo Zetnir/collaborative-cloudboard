@@ -1,0 +1,31 @@
+.priority-select {
+  width: 100px !important;
+  height: 40px !important;
+
+  .ts-wrapper {
+    width: 100px !important;
+    height: 40px !important;
+    padding: 0px !important;
+    background-color: var(--color-surface-container-high) !important;
+  }
+
+  .ts-control {
+    background-color: var(--color-surface-container-high) !important;
+    border: none !important;
+    font-size: var(--h2-size) !important;
+    font-weight: var(--h2-weight) !important;
+    color: var(--color-on-surface) !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+
+    &input {
+      font-size: var(--h2-size) !important;
+    }
+
+    .item {
+      border-radius: 0.25rem !important;
+      padding: 0.15rem 0.5rem !important;
+      font-size: 0.875rem !important;
+    }
+  }
+}

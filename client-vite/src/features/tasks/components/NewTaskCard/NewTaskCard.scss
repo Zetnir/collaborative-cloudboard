@@ -1,11 +1,16 @@
-.new-task-text {
-  color: var(--color-outline);
-}
-
 .new-task-card {
+  display: flex;
+  color: var(--color-outline);
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
   width: 280px;
   height: 50px;
-  background-color: var(--color-surface);
-  border: 2px dashed var(--color-outline);
+  background-color: transparent;
+  border: 0px;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-surface-container);
+  }
 }

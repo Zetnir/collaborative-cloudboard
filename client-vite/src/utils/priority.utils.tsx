@@ -6,9 +6,11 @@ import {
   FiMinus,
 } from "react-icons/fi";
 
+import { renderToStaticMarkup } from "react-dom/server";
+
 import { ReactNode } from "react";
 
-const priorityIcons: Record<string, ReactNode> = {
+export const priorityIcons: Record<string, ReactNode> = {
   highest: (
     <FiChevronsUp color="var(--color-danger)" size={18} strokeWidth={3} />
   ),
@@ -20,5 +22,10 @@ const priorityIcons: Record<string, ReactNode> = {
   ),
 };
 
-export const getPriorityIcon = (priority: string): ReactNode =>
-  priorityIcons[priority] ?? null;
+export const getPriorityIcon = (
+  priority: string,
+  isStatic: boolean = false,
+): ReactNode =>
+  isStatic
+    ? renderToStaticMarkup(priorityIcons[priority] ?? null)
+    : (priorityIcons[priority] ?? null);

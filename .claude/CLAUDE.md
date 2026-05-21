@@ -60,14 +60,14 @@ Feature-based structure under `features/`:
 
 - `features/auth/` — AuthProvider (React Context), login/register forms, JWT token utils, authApi
 - `features/projects/` — project list, cards, creation modal, projectsApi
-- `features/tasks/` — TaskBoard with @dnd-kit drag-drop, TaskCard, TaskColumn, TaskModal
+- `features/tasks/` — TaskBoard with @dnd-kit drag-drop, TaskCard, TaskColumn, TaskDetails modal (full task edit with RTE, comments, priority, assignee)
 
 Shared:
 
-- `components/` — ProtectedRoute, TopNav, SidePanel
+- `components/` — ProtectedRoute, TopNav, SidePanel, PrioritySelect (TomSelect-based dropdown)
 - `pages/` — AuthPage, Dashboard, ErrorPage, ProjectDetails
 - `api/axiosInstance.ts` — axios with request interceptor that auto-injects `Authorization: Bearer <token>` from localStorage
-- `api/tasksApi.ts` — `getTasksByProject(projectId)`, `createTask(taskData)`
+- `api/tasksApi.ts` — `getTasksByProject(projectId)`, `createTask(taskData)`, `moveTask(id, { status, order })`
 - `api/usersApi.ts` — `getAll()`, `getById(id)`
 - `api/uploadsApi.ts` — image upload to Cloudinary via FormData
 - `styles/theme.scss` — global SASS variables and Bootstrap overrides
@@ -101,11 +101,14 @@ utils/         generateToken
 - `GET /api/tasks?project=<id>` — fetch tasks filtered by project, sorted by `order`
 - `PATCH /api/tasks/:id/move` — accepts `{ order, status }` to persist drag-drop position
 
+**Project-specific endpoints:**
+- `PATCH /api/projects/:id/move` — accepts `{ columns }` to persist column order/additions
+
 **Mongoose models:**
 
 - `User`: username, email, passwordHash, firstName, lastName, avatarUrl, role (`user` | `admin`)
-- `Project`: name, description, owner (ref User), members (ref[] User), access (`private` | `public`), workspace, coverImgUrl
-- `Task`: title, description, status (`todo` | `in-progress` | `done`), project (ref), assignee (ref User, nullable), order (drag-drop sort)
+- `Project`: name, description, owner (ref User), members (ref[] User), access (`private` | `public`), workspace, coverImgUrl, columns (`string[]` — ordered list of column names)
+- `Task`: title, description, status (mirrors current column name), project (ref), assignee (ref User, nullable), order (drag-drop sort within column), priority (`lowest` | `low` | `medium` | `high` | `highest`), dueDate, comments (`{ user, text, createdAt }[]`)
 
 Backend uses ES modules (`"type": "module"`); imports must use `.js` extensions in TypeScript source files.
 
@@ -121,3 +124,5 @@ Socket.io is initialized in `server/src/index.ts` but only logs connections — 
 - All controllers transform Mongoose documents to DTOs before responding — never return raw `_id` fields
 - Task ordering for drag-drop is persisted via the `order` field on the Task model; use `PATCH /tasks/:id/move` for position updates
 - Zod validator for `assignee` transforms `""` → `null` to avoid Mongoose ObjectId cast errors
+- Columns are dynamic and stored on the Project model as `string[]`; `PATCH /api/projects/:id/move` persists column reordering; a task's `status` field mirrors its column name
+- Priority display uses `getPriorityIcon()` from `utils/priority.utils.tsx` — two render modes: React element (default) and static HTML string (`isStatic: true`) for TomSelect dropdown injection

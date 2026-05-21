@@ -8,7 +8,7 @@ import { FaRegClock } from "react-icons/fa6";
 
 import "./TaskCard.scss";
 import { getPriorityIcon } from "../../../../utils/priority.utils";
-import { formatDate, formatDateString } from "../../../../utils/text.utils";
+import { formatDate } from "../../../../utils/text.utils";
 
 interface TaskCardProps {
   task: Task;
@@ -51,7 +51,7 @@ export const TaskCard = ({
 
   return (
     <div
-      className="task-card card my-2"
+      className="task-card card"
       ref={ref}
       data-dragging={isDragging}
       data-bs-toggle="modal"

@@ -14,6 +14,8 @@ import { CommentsSection } from "./CommentsSection/CommentsSection";
 import { useAuth } from "../../../auth/hooks/AuthContext";
 import { User } from "../../../auth/types/auth.types";
 import { usersApi } from "../../../../api/usersApi";
+import { FiChevronsDown } from "react-icons/fi";
+import { PrioritySelect } from "../../../../components/PrioritySelect/PrioritySelect";
 
 export interface TaskDetailsProps {
   task: Task;
@@ -60,6 +62,14 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
     onCardUpdate?.({ ...task, description: newDescription });
   };
 
+  const handlePriorityChange = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const newPriority = e.target.value;
+    await tasksApi.update(task.id, { ...task, priority: newPriority });
+    onCardUpdate?.({ ...task, priority: newPriority });
+  };
+
   const saveComment = async (text: string) => {
     const newComment = {
       user: user?.id || "",
@@ -90,6 +100,11 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
         console.error("Failed to autosave description:", err);
       });
     }, 500);
+  };
+
+  const onPriorityChange = async (newPriority: string) => {
+    await tasksApi.update(task.id, { ...task, priority: newPriority });
+    onCardUpdate?.({ ...task, priority: newPriority });
   };
 
   const onCommentSubmit = (newComment: string) => {
@@ -137,12 +152,10 @@ export const TaskDetails = ({ task, onCardUpdate }: TaskDetailsProps) => {
                         {beautifyText(task?.title)}
                       </h2>
                       <div className="d-flex flex-row gap-2 ">
-                        {task?.priority && (
-                          <span className="priority-badge badge p-2 px-3 d-flex align-items-center">
-                            {getPriorityIcon(task?.priority || "")}{" "}
-                            {beautifyText(task?.priority || "")}
-                          </span>
-                        )}
+                        <PrioritySelect
+                          value={task?.priority || ""}
+                          onChange={onPriorityChange}
+                        />
                         <span className="status-badge badge bg-primary p-2 px-3 d-flex align-items-center">
                           <div className="dot-white"></div>
                           {beautifyText(task?.status || "")}

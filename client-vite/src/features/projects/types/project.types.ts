@@ -5,6 +5,7 @@ export interface Project {
   owner: string;
   members: string[];
   access: "private" | "public";
+  columns?: string[];
   workspace: string;
   coverImgUrl: string | null;
   createdAt: string;

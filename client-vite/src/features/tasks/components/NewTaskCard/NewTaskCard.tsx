@@ -13,10 +13,8 @@ export const NewTaskCard: FC = () => {
       data-bs-toggle="modal"
       data-bs-target="#taskModal"
     >
-      <span className="new-task-text col-10 text-center mb-0">
-        <FaPlus className="me-2" color="var(--color-outline)" />
-        Add task
-      </span>
+      <FaPlus className="me-2" color="var(--color-outline)" />
+      Add task
     </div>
   );
 };

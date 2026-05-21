@@ -1,5 +1,12 @@
 .task-column {
-  background: transparent;
+  background: var(--color-surface-container);
+  border: 0px;
   width: 300px;
   min-height: 300px;
+
+  .column-header,
+  .column-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
